@@ -1,8 +1,14 @@
+import json
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-wiesg1k1cf4)q==0oxrd1xk+)6&ct_b*(y)55tkvqx=@%3)7ob'
+
+# Keep API keys in keys.json and keep keys.json in .gitignore
+# This is for safety
+with open('keys.json', 'r') as keys:
+    KEYS = json.load(keys)
 
 DEBUG = True
 
@@ -50,6 +56,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'hobbynet.wsgi.application'
 
+# Postgres database setup
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -61,6 +68,7 @@ DATABASES = {
     }
 }
 
+# Password validators to check the passwords
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -75,6 +83,15 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Email backend configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = KEYS['EMAIL_KEY']
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'hobbynet@redttg.com'
 
 LANGUAGE_CODE = 'en-us'
 
