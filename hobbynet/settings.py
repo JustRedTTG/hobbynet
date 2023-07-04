@@ -7,8 +7,13 @@ SECRET_KEY = 'django-insecure-wiesg1k1cf4)q==0oxrd1xk+)6&ct_b*(y)55tkvqx=@%3)7ob
 
 # Keep API keys in keys.json and keep keys.json in .gitignore
 # This is for safety
-with open('keys.json', 'r') as keys:
-    KEYS = json.load(keys)
+
+keys_file = BASE_DIR / 'keys.json'
+if keys_file.exists():
+    with open('keys.json', 'r') as keys:
+        KEYS = json.load(keys)
+else:
+    KEYS = {}
 
 DEBUG = True
 
@@ -89,8 +94,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = KEYS['EMAIL_KEY']
-EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = KEYS.get('EMAIL_KEY', '')
+EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'hobbynet@redttg.com'
 
 LANGUAGE_CODE = 'en-us'
