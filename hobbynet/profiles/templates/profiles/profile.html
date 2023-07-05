@@ -2,6 +2,15 @@
 
 {% block content %}
     {#    TODO: NOT READY FOR PRODUCTION#}
-    <p>Profile (display_name): {{ user.profile }}</p>
+    <div class="d-flex mb-4 px-5 profile-header">
+        <img src="https://avatars.githubusercontent.com/u/46073266?v=4" class="me-5">
+        <div>
+            <h1>{{ user.profile }}</h1>
+            <p>Joined: {{ user.date_joined|date:"d F Y" }}</p>
+            <p>Topics: {{ user.topics|length }}</p>
+            <p>Posts: {{ user.posts|length }}</p>
+        </div>
+    </div>
+    <p>Profile (display_name): </p>
     <p>Profile Slug: {{ user.profile.slug }}</p>
 {% endblock %}
