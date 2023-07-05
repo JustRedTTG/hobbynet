@@ -1,12 +1,26 @@
 .auth-form {
+    border: 1px solid #ccc;
     border-radius: 5px;
-    box-shadow: lightgray 0 0 30px;
-    width: 300px;
-    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 500px;
 }
 
-.auth-form p {
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form label {
+    display: block;
+    font-weight: bold;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }

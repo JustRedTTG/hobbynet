@@ -1,21 +1,30 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 {% block content %}
-    <form action="{% block success_url %}{% endblock %}" method="post" class="auth-form">
-        {% for field in form %}
-            <p>
-                {{ field.label_tag }}
-                {{ field }}
-            </p>
-        {% endfor %}
-        {% if form.errors %}
-            {% for field in form %}
-                {% if field.errors %}
-                    {{ field.errors }}
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-        <button type="submit">{% block submit_text %}{% endblock %}</button>
-        {% csrf_token %}
-    </form>
+    <div class="d-flex justify-content-center">
+        <div class="card border-0">
+            <div class="text-center mb-2">
+                <img src="{% static 'images/logo.png' %}" class="mb-4">
+                <h1>Welcome to Hobby Net</h1>
+            </div>
+            <div class="card-body">
+                <form action="{% block success_url %}{% endblock %}" method="post" class="auth-form">
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <small class="text-danger">{{ field.errors }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">{% block submit_text %}{% endblock %}</button>
+                    or
+                    <a href="{% block other_url %}{% endblock %}">{% block other_text %}{% endblock %}</a>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
