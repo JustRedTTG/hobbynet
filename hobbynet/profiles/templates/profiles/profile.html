@@ -1,2 +1,7 @@
-{{ user.profile }}
-{{ slug }}
+{% extends 'base/base.html' %}
+
+{% block content %}
+    {#    TODO: NOT READY FOR PRODUCTION#}
+    <p>Profile (display_name): {{ user.profile }}</p>
+    <p>Profile Slug: {{ user.profile.slug }}</p>
+{% endblock %}
