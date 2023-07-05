@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-sm mb-5">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img class="navbar-logo" src="https://avatars.githubusercontent.com/u/46073266?v=4" alt="RedTTG"
+                 class="d-inline-block align-top">
+        </a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+            <ul class="navbar-nav me-auto">
+                {% include 'base/navbar_item.html' with href='/' text='HobbyNet' %}
+{#                <li class="nav-item">#}
+{#                    <div class="dropdown">#}
+{#                        <a class="nav-link dropdown-toggle" href="#"#}
+{#                           id="navbarDropdownnavbar_item.text" role="button" data-bs-toggle="dropdown"#}
+{#                           aria-haspopup="true" aria-expanded="false">#}
+{#                            navbar_item.text#}
+{#                        </a>#}
+{#                        <div class="dropdown-menu dropdown-menu-light"#}
+{#                             aria-labelledby="navbarDropdownnavbar_item.text">#}
+{#                            <a class="dropdown-item"#}
+{#                               href="#">sub_item.text</a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </li>#}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{{ text_list }}
