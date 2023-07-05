@@ -14,7 +14,6 @@ def profile_details(request, pk, slug):
         return redirect('profile_details', pk=pk, slug=user.profile.slug)
     return render(request, 'profiles/profile.html', context={
         'user': user,
-        'slug': slug
     })
 
 
