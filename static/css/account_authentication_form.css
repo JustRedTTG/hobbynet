@@ -1,0 +1,12 @@
+.auth-form {
+    border-radius: 5px;
+    box-shadow: lightgray 0 0 30px;
+    width: 300px;
+    padding: 10px;
+}
+
+.auth-form p {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
