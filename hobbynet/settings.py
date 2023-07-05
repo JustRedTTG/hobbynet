@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-wiesg1k1cf4)q==0oxrd1xk+)6&ct_b*(y)55tkvqx=@%3)7ob'
@@ -26,9 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'hobbynet.app_auth',
     'hobbynet.common',
+    'hobbynet.profiles',
 ]
 
 MIDDLEWARE = [
@@ -77,18 +79,12 @@ DATABASES = {
 # Password validators to check the passwords
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
 ]
+
+if DEBUG:
+    AUTH_PASSWORD_VALIDATORS.clear()
 
 # Email backend configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -112,4 +108,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'app_auth.UserModel'
+AUTH_USER_MODEL = 'app_auth.AccountModel'
+
+LOGIN_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = reverse_lazy('profile_details_self')
