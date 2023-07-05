@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% block icons_base %}
+        {% include 'base/icons_base.html' %}
+    {% endblock %}
+    {% block head %}{% endblock %}
+    {% block stylesheets %}
+
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    Howdy
+{% endblock %}
+</body>
+</html>
