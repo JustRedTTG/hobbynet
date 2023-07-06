@@ -6,4 +6,6 @@ urlpatterns = [
     path('', include('hobbynet.common.urls')),
     path('accounts/', include('hobbynet.app_auth.urls')),
     path('profiles/', include('hobbynet.profiles.urls')),
+    path('topics/', include('hobbynet.topics.urls')),
+    path('posts/', include('hobbynet.posts.urls')),
 ]

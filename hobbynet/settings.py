@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'hobbynet.app_auth',
     'hobbynet.common',
     'hobbynet.profiles',
+    'hobbynet.topics',
+    'hobbynet.posts',
 ]
 
 MIDDLEWARE = [
