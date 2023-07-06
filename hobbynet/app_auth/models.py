@@ -37,3 +37,5 @@ class AccountModel(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     email = models.EmailField(unique=True)
     date_joined = models.DateTimeField(default=timezone.now)
     objects = AccountManager()
+
+    is_staff = models.BooleanField(default=False)
