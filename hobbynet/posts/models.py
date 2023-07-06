@@ -17,7 +17,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=50)
     content = models.TextField()
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)  # TODO: Add upload_to (use a storage service)
 
     def save(self, *args, **kwargs):
         if not self.privacy:
