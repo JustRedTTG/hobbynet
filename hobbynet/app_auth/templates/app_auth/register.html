@@ -1,9 +1,11 @@
-{% extends 'base/base.html' %}
+{% extends 'base/account_authentication_form.html' %}
 
-{% block content %}
-    <form action="{% url 'register' %}" method="post">
-        {{ form }}
-        <button type="submit">Register</button>
-        {% csrf_token %}
-    </form>
+{% block submit_text %}
+    Register
+{% endblock %}
+{% block other_text %}
+    Login
+{% endblock %}
+{% block other_url %}
+    {% url 'login' %}
 {% endblock %}

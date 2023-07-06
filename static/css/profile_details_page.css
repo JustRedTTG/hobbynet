@@ -1,0 +1,21 @@
+.profile-header {
+    height: 250px;
+}
+
+.profile-header img {
+    border-radius: 10px;
+}
+
+.profile-header h1 {
+    font-size: 5rem;
+}
+
+/*.profile-topics .nav-link {*/
+/*    color: var(--bs-nav-link-color);*/
+/*}*/
+
+/*#profile-topics h3 {*/
+/*  color : white;*/
+/*  background-color: #428bca;*/
+/*  padding : 5px 15px;*/
+/*}*/

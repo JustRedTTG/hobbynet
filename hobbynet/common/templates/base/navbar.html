@@ -1,0 +1,34 @@
+{% load static %}
+
+{% url 'register' as register_url %}
+{% url 'login' as login_url %}
+
+<nav class="navbar navbar-expand-sm mb-5">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img class="d-inline-block align-top navbar-logo" src="{% static 'images/logo.png' %}" alt="Hobby Net">
+        </a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+            {% if request.user.is_authenticated %}
+            <ul class="navbar-nav me-auto">
+                {% include 'base/navbar_item.html' with href='/' text='Make Post' %}
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                {% include 'base/navbar_item.html' with href='/' text=request.user.profile %}
+            </ul>
+            {% else %}
+            <ul class="navbar-nav ms-auto">
+                {% include 'base/navbar_item.html' with href=login_url text='Login' %}
+                {% include 'base/navbar_item.html' with href=register_url text='Register' %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+{{ text_list }}

@@ -4,14 +4,13 @@
 {% block title %}HobbyNet{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
 {% endblock %}
 
 {% block body %}
+    {% include 'base/navbar.html' %}
     {% block content %}
     {% endblock %}
     {% block javascript %}
-    {% endblock %}
-    {% block javascript_extra %}
     {% endblock %}
 {% endblock %}
