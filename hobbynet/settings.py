@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'hobbynet.app_auth',
     'hobbynet.common',
     'hobbynet.profiles',
@@ -115,3 +115,8 @@ AUTH_USER_MODEL = 'app_auth.AccountModel'
 
 LOGIN_URL = reverse_lazy('login')
 LOGIN_REDIRECT_URL = reverse_lazy('profile_details_self')
+
+PRIVACY_MODEL_CHOICES = [
+    ('private', 'Private'),
+    ('public', 'Public')
+]
