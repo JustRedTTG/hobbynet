@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'hobbynet.profiles',
     'hobbynet.topics',
     'hobbynet.posts',
+
+    'django_backblaze_b2',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +122,21 @@ PRIVACY_MODEL_CHOICES = [
     ('private', 'Private'),
     ('public', 'Public')
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "my_cache_table",
+    },
+    "django-backblaze-b2": {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'django_backblaze_b2_cache_table',
+    }
+}
+
+BACKBLAZE_CONFIG = {
+    # however you want to securely retrieve these values
+    "application_key_id": KEYS.get('BACKBLAZE_KEY_ID', ''),
+    "application_key": KEYS.get('BACKBLAZE_KEY', ''),
+    "bucket": "HobbyNetMedia"
+}

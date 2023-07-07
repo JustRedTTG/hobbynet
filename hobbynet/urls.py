@@ -8,4 +8,5 @@ urlpatterns = [
     path('profiles/', include('hobbynet.profiles.urls')),
     path('topics/', include('hobbynet.topics.urls')),
     path('posts/', include('hobbynet.posts.urls')),
+    path('', include('django_backblaze_b2.urls')),
 ]

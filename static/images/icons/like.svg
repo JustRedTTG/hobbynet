@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- License: Apache. Made by Iconscout: https://github.com/Iconscout/unicons -->
+<!--Edited version-->
+
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="666.4979"
+     height="591.26183" viewBox="0,0,666.4979,591.26183">
+    <g transform="translate(-294.26618,-272.02522)">
+        <g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill="#000000" fill-rule="nonzero" stroke="none"
+           stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray=""
+           stroke-dashoffset="0" style="mix-blend-mode: normal">
+            <path d="M900,629.33334l-207,207.33333c-36.06518,35.49385 -93.93482,35.49385 -130,0l-207,-207.33333c-77.8116,-77.26864 -82.67244,-201.53659 -11.13421,-284.64718c71.53823,-83.11059 195.14566,-96.79823 283.13422,-31.35282c83.5266,-60.92051 198.99248,-51.86437 272,21.33333c81.01877,81.51511 81.01877,213.15157 0,294.66667zM853,582.33334c53.6386,-56.30244 52.454,-145.14769 -2.66666,-200c-55.4339,-54.73028 -144.5661,-54.73028 -200,0c-6.25888,6.31042 -14.77875,9.85994 -23.66667,9.85994c-8.88792,0 -17.40778,-3.54952 -23.66666,-9.85994c-55.4339,-54.73028 -144.5661,-54.73028 -200,0c-54.37286,55.58013 -54.37286,144.41987 0,200l207,208c4.75779,4.80414 11.23861,7.50701 18,7.50701c6.76139,0 13.24221,-2.70287 18,-7.50701l207,-207z"/>
+        </g>
+    </g>
+</svg>
