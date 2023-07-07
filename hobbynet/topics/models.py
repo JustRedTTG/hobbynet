@@ -6,7 +6,7 @@ from django_backblaze_b2 import BackblazeB2Storage
 UserModel = get_user_model()
 
 def topic_image_generator(instance, filename):
-    return f'topic_profile_pictures/{instance.user_id}{instance.id}{instance.user.profile.slug}/{filename}'
+    return f'topic_profile_pictures/{instance.user_id}_{instance.user.profile.slug}/{instance.id}/{filename}'
 
 class Topic(models.Model):
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
