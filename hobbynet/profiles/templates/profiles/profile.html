@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="d-flex mb-4 px-5 profile-header">
-        <img src="https://avatars.githubusercontent.com/u/46073266?v=4" class="me-5">
+        <img {% include 'base/display_profile_picture.html' with user=user %} class="me-5">
         <div>
             <h1>{{ user.profile }}</h1>
             <p>Joined: {{ user.date_joined|date:"d F Y" }}</p>

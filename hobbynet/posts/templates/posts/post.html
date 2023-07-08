@@ -3,13 +3,13 @@
 <div class="card container-sm my-4 px-0">
     <div class="card-header">
         <div class="d-flex align-items-center">
-            <img src="https://avatars.githubusercontent.com/u/46073266?v=4" alt="{{ user.profile.display_name }}"
+            <img {% include 'base/display_profile_picture.html' with user=user topic=post.topic %}
                  class="rounded-circle me-2" width="40" height="40">
             <h6 class="mb-0 mx-2">
                 {% include 'base/display_name.html' with display_name=user.profile.display_name topic_display_name=post.topic.display_name %}
             </h6>
             <span class="ms-auto">
-                {% if post.visibility == 'private' %}
+                {% if post.visibility != 'public' %}
                     <img src="{% static "images/icons/private.svg" %}" alt="Private post" width="15" height="15">
                 {% endif %}
                 <sub class="ms-1">from "{{ post.topic.title }}"</sub>

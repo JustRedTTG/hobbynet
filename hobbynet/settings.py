@@ -122,6 +122,7 @@ LOGIN_REDIRECT_URL = reverse_lazy('profile_details_self')
 
 PRIVACY_MODEL_CHOICES = [
     ('private', 'Private'),
+    ('friends', 'Friends'),
     ('public', 'Public')
 ]
 
