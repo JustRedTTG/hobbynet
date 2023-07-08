@@ -127,13 +127,23 @@ PRIVACY_MODEL_CHOICES = [
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "my_cache_table",
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://sernex:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": KEYS.get('REDIS_PASSWORD', '')
+        },
+        "KEY_PREFIX": "hobbynet_default"
     },
     "django-backblaze-b2": {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'django_backblaze_b2_cache_table',
-    }
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://sernex:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": KEYS.get('REDIS_PASSWORD', '')
+        },
+        "KEY_PREFIX": "django-backblaze-b2"
+    },
 }
 
 if DEBUG:
