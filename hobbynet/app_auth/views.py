@@ -6,13 +6,13 @@ from django.shortcuts import render
 import django.views.generic as views
 from django.urls import reverse_lazy
 
-from hobbynet.profiles.models import Profile
+from hobbynet.profiles.models import Profile, DISPLAY_NAME_MIN_LENGTH
 
 UserModel = get_user_model()
 
 
 class RegisterAccountForm(auth_forms.UserCreationForm):
-    display_name = forms.CharField(max_length=20)
+    display_name = forms.CharField(max_length=20, min_length=DISPLAY_NAME_MIN_LENGTH)
 
 
     def save(self, commit=True):
