@@ -1,56 +1,46 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    {#    TODO: NOT READY FOR PRODUCTION#}
-    <p>Profile (display_name): </p>
-    <p>Profile Slug: {{ user.profile.slug }}</p>
-
     <div class="d-flex mb-4 px-5 profile-header">
-        <img src="https://avatars.githubusercontent.com/u/46073266?v=4" class="me-5">
+        <img {% include 'base/display_profile_picture.html' with user=user %} class="me-5">
         <div>
             <h1>{{ user.profile }}</h1>
             <p>Joined: {{ user.date_joined|date:"d F Y" }}</p>
-            <p>Topics: {{ user.topics|length }}</p>
-            <p>Posts: {{ user.posts|length }}</p>
+            <p>Topics: {{ user.topic_set.count }}</p>
+            <p>Posts: {{ user.post_set.count }}</p>
         </div>
     </div>
-    {#    <div class="profile-topics">#}
-    {#        <ul class="nav nav-tabs">#}
-    {#            <li class="nav-item">#}
-    {#                <a class="nav-link {% if request.path == '/tab1/' %}active{% endif %}" href="#">Tab 1</a>#}
-    {#            </li>#}
-    {#            <li class="nav-item">#}
-    {#                <a class="nav-link {% if request.path == '/tab2/' %}active{% endif %}" href="#">Tab 2</a>#}
-    {#            </li>#}
-    {#            <li class="nav-item">#}
-    {#                <a class="nav-link {% if request.path == '/tab3/' %}active{% endif %}" href="#">Tab 3</a>#}
-    {#            </li>#}
-    {#        </ul>#}
-    {#    </div>#}
-
     <div id="profile-topics" class="container-fluid">
 
         <ul class="nav nav-tabs">
-            {% for topic in user.topics %}
-                <li class="nav-item">
-                    <a class="nav-link active" href="#{{ forloop.counter }}" data-bs-toggle="tab">topic.name</a>
-                </li>
+            {% for topic in user.topic_set.all %}
+                {% if topic.visibility == 'public' or request.user == topic.user %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if forloop.counter == 1 %}active{% endif %}" href="#{{ forloop.counter }}"
+                           data-bs-toggle="tab">{{ topic.title }}</a>
+                    </li>
+                {% endif %}
             {% endfor %}
         </ul>
 
         <div class="tab-content">
-            {% for topic in user.topics %}
-                <div class="tab-pane active" id="{{ forloop.counter }}">
-                    {% for post in topic.post_set.all %}
-                        {% if post.privacy == 'public' or user == post.creator %}
-                            <h3>post.title</h3>
+            {% for topic in user.topic_set.all %}
+                {% if topic.visibility == 'public' or request.user == topic.user %}
+                    <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ forloop.counter }}">
+                        {% for post in topic.post_set.all %}
+                            {% if post.visibility == 'public' or request.user == post.user %}
+                                {% include 'posts/post.html' with post=post class='fluid' img_class='fluid' %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if topic.post_set.count < 1 %}
+                            <h1 class="mt-5 text-center">{{ topic.title }} has no posts.</h1>
                         {% endif %}
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
-        {% if not user.topics %}
-            <h1 class="mt-5 text-center">User has no topics yet</h1>
+        {% if user.topic_set.count < 1 %}
+            <h1 class="mt-5 text-center">{{ user.profile }} has no topics.</h1>
         {% endif %}
     </div>
 

@@ -1,0 +1,10 @@
+{% if topic %}
+    {% if topic.profile_picture %}
+        src="{{ topic.profile_picture.url }}"
+    {% else %}
+        src="{{ user.profile.profile_picture.url }}"
+    {% endif %}
+{% else %}
+    src="{{ user.profile.profile_picture.url }}"
+{% endif %}
+alt="{{ user.profile }}"

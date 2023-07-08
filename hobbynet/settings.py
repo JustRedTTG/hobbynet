@@ -28,13 +28,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'hobbynet.app_auth',
     'hobbynet.common',
     'hobbynet.profiles',
+    'hobbynet.topics',
+    'hobbynet.posts',
+
+    'django_backblaze_b2',
 ]
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -42,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 ROOT_URLCONF = 'hobbynet.urls'
@@ -113,3 +119,42 @@ AUTH_USER_MODEL = 'app_auth.AccountModel'
 
 LOGIN_URL = reverse_lazy('login')
 LOGIN_REDIRECT_URL = reverse_lazy('profile_details_self')
+
+PRIVACY_MODEL_CHOICES = [
+    ('private', 'Private'),
+    ('friends', 'Friends'),
+    ('public', 'Public')
+]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://sernex:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": KEYS.get('REDIS_PASSWORD', '')
+        },
+        "KEY_PREFIX": "hobbynet_default"
+    },
+    "django-backblaze-b2": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://sernex:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": KEYS.get('REDIS_PASSWORD', '')
+        },
+        "KEY_PREFIX": "django-backblaze-b2"
+    },
+}
+
+if DEBUG:
+    CACHES['default'] = {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+
+BACKBLAZE_CONFIG = {
+    # however you want to securely retrieve these values
+    "application_key_id": KEYS.get('BACKBLAZE_KEY_ID', ''),
+    "application_key": KEYS.get('BACKBLAZE_KEY', ''),
+    "bucket": "HobbyNetMedia"
+}
