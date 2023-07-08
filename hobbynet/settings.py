@@ -136,6 +136,10 @@ CACHES = {
     }
 }
 
+if DEBUG:
+    CACHES['default'] = {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
 
 BACKBLAZE_CONFIG = {
     # however you want to securely retrieve these values
