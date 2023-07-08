@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-
+import socket
 from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +18,7 @@ else:
     KEYS = {}
 
 DEBUG = True
+DEBUG_SERVER = socket.gethostname() == 'sernex'
 
 ALLOWED_HOSTS = ['hobbynet.redttg.com']
 
@@ -90,7 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-if DEBUG:
+if not DEBUG_SERVER:
     AUTH_PASSWORD_VALIDATORS.clear()
 
 # Email backend configuration
@@ -147,7 +148,7 @@ CACHES = {
     },
 }
 
-if DEBUG:
+if DEBUG_SERVER:
     CACHES['default'] = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
