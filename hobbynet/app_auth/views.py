@@ -14,7 +14,6 @@ UserModel = get_user_model()
 class RegisterAccountForm(auth_forms.UserCreationForm):
     display_name = forms.CharField(max_length=20)
 
-
     def save(self, commit=True):
         user = super().save(commit)
 
@@ -37,6 +36,7 @@ class RegisterAccountView(views.CreateView):
     template_name = 'app_auth/register.html'
     form_class = RegisterAccountForm
     success_url = reverse_lazy('profile_details_self')
+
     def form_valid(self, form):
         response = super().form_valid(form)
         login(self.request, self.object)

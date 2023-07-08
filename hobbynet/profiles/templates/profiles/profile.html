@@ -29,7 +29,7 @@
                     <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ forloop.counter }}">
                         {% for post in topic.post_set.all %}
                             {% if post.visibility == 'public' or request.user == post.user %}
-                                {% include 'posts/post.html' with post=post class='fluid' img_class='fluid' %}
+                                {% include 'base/post.html' with post=post class='fluid' %}
                             {% endif %}
                         {% endfor %}
                         {% if topic.post_set.count < 1 %}
