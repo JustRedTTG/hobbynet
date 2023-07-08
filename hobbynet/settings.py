@@ -158,3 +158,7 @@ BACKBLAZE_CONFIG = {
     "application_key": KEYS.get('BACKBLAZE_KEY', ''),
     "bucket": "HobbyNetMedia"
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://hobbynet.redttg.com'
+]
