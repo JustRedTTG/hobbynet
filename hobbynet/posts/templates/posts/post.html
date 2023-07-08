@@ -9,7 +9,7 @@
                 {% include 'base/display_name.html' with display_name=user.profile.display_name topic_display_name=post.topic.display_name %}
             </h6>
             <span class="ms-auto">
-                {% if post.privacy == 'private' %}
+                {% if post.visibility == 'private' %}
                     <img src="{% static "images/icons/private.svg" %}" alt="Private post" width="15" height="15">
                 {% endif %}
                 <sub class="ms-1">from "{{ post.topic.title }}"</sub>

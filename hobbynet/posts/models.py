@@ -3,23 +3,21 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
+from hobbynet.common.models import Visibility
 from hobbynet.topics.models import Topic
 from pathlib import Path
 from django_backblaze_b2 import BackblazeB2Storage
 
 UserModel = get_user_model()
 
+
 def posts_image_generator(instance, filename):
     return f'posts/{instance.user_id}_{instance.user.profile.slug}/{instance.topic_id}/{instance.id}/{filename}'
 
-class Post(models.Model):
+
+class Post(Visibility, models.Model):
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-
-    privacy = models.CharField(
-        null=True, blank=True,
-        max_length=10,
-        choices=getattr(settings, 'PRIVACY_MODEL_CHOICES', None))
 
     date_created = models.DateTimeField(default=timezone.now)
 
@@ -33,12 +31,12 @@ class Post(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        if not self.privacy:
-            self.privacy = self.topic.privacy
+        if not self.visibility:
+            self.visibility = self.topic.visibility
         super().save(*args, **kwargs)
 
     def __repr__(self):
         return self.title
 
     def __str__(self):
-        return f'[{self.privacy}/{self.topic.privacy}][{self.user}]'
+        return f'[{self.visibility}/{self.topic.visibility}][{self.user}]'

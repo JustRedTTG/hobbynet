@@ -14,7 +14,7 @@
 
         <ul class="nav nav-tabs">
             {% for topic in user.topic_set.all %}
-                {% if topic.privacy == 'public' or request.user == topic.user %}
+                {% if topic.visibility == 'public' or request.user == topic.user %}
                     <li class="nav-item">
                         <a class="nav-link {% if forloop.counter == 1 %}active{% endif %}" href="#{{ forloop.counter }}"
                            data-bs-toggle="tab">{{ topic.title }}</a>
@@ -25,10 +25,10 @@
 
         <div class="tab-content">
             {% for topic in user.topic_set.all %}
-                {% if topic.privacy == 'public' or request.user == topic.user %}
+                {% if topic.visibility == 'public' or request.user == topic.user %}
                     <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ forloop.counter }}">
                         {% for post in topic.post_set.all %}
-                            {% if post.privacy == 'public' or request.user == post.user %}
+                            {% if post.visibility == 'public' or request.user == post.user %}
                                 {% include 'posts/post.html' with post=post class='fluid' img_class='fluid' %}
                             {% endif %}
                         {% endfor %}

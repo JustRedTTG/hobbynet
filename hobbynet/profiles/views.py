@@ -8,7 +8,7 @@ UserModel: User = get_user_model()
 
 def profile_details(request, pk, slug):
     user = UserModel.objects.get(pk=pk)
-    if not user:
+    if not user or user.profile.visibility == 'private':
         raise Http404("User profile doesn't exist")
     if user.profile.slug != slug:
         return redirect('profile_details', pk=pk, slug=user.profile.slug)
