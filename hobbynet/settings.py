@@ -19,7 +19,7 @@ else:
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['hobbynet.redttg.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
