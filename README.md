@@ -1,2 +1,3 @@
-# hobbynet
+# Hobby Net
+Softuni Project
 
