@@ -20,7 +20,7 @@ else:
 DEBUG = True
 DEBUG_SERVER = socket.gethostname() == 'sernex'
 
-ALLOWED_HOSTS = ['hobbynet.redttg.com']
+ALLOWED_HOSTS = ['hobbynet.redttg.com', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
