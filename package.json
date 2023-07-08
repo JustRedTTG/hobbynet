@@ -1,0 +1,7 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "dependencies": {
+    "@vue/cli": "5.0.8"
+  }
+}
