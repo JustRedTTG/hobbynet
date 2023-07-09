@@ -3,8 +3,10 @@
 <div class="card container-sm my-4 px-0">
     <div class="card-header">
         <div class="d-flex align-items-center">
-            <img {% include 'base/display_profile_picture.html' with user=post.user topic=post.topic %}
-                    class="rounded-circle me-2" width="40" height="40">
+            <a href="{% url 'profile_details' pk=post.user.profile.pk slug=post.user.profile.slug %}?topic={{ post.topic.pk }}">
+                <img {% include 'base/display_profile_picture.html' with user=post.user topic=post.topic %}
+                        class="rounded-circle me-2" width="40" height="40">
+            </a>
             <h6 class="mb-0 mx-2">
                 {% include 'base/display_name.html' with display_name=post.user.profile.display_name topic_display_name=post.topic.display_name %}
             </h6>

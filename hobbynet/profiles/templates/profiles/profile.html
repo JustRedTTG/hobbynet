@@ -1,8 +1,9 @@
 {% extends 'base/base.html' %}
+{% load get_topic_active %}
 
 {% block content %}
     <div class="d-flex mb-4 px-5 profile-header">
-        <img {% include 'base/display_profile_picture.html' with user=user %} class="me-5">
+        <img {% include 'base/display_profile_picture.html' with user=user %} class="me-5 rounded-5">
         <div>
             <h1>{{ user.profile }}</h1>
             <p>Joined: {{ user.date_joined|date:"d F Y" }}</p>
@@ -16,7 +17,7 @@
             {% for topic in user.topic_set.all %}
                 {% if topic.visibility == 'public' or request.user == topic.user %}
                     <li class="nav-item">
-                        <a class="nav-link {% if forloop.counter == 1 %}active{% endif %}" href="#{{ forloop.counter }}"
+                        <a class="nav-link {% get_topic_active topic request.GET %}" href="#{{ forloop.counter }}"
                            data-bs-toggle="tab">{{ topic.title }}</a>
                     </li>
                 {% endif %}
@@ -26,7 +27,7 @@
         <div class="tab-content">
             {% for topic in user.topic_set.all %}
                 {% if topic.visibility == 'public' or request.user == topic.user %}
-                    <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ forloop.counter }}">
+                    <div class="tab-pane {% get_topic_active topic request.GET %}" id="{{ forloop.counter }}">
                         {% for post in topic.post_set.all %}
                             {% if post.visibility == 'public' or request.user == post.user %}
                                 {% include 'base/post.html' with post=post class='fluid' %}
