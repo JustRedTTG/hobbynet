@@ -1,9 +1,16 @@
 {% extends 'base/base.html' %}
 {% load get_topic_active %}
+{% load static %}
 
 {% block content %}
     <div class="d-flex mb-4 px-5 profile-header">
-        <img {% include 'base/display_profile_picture.html' with user=user %} class="me-5 rounded-5">
+        {% if request.user == user %}
+            <a href="{% url 'profile_edit' %}" class="profile-picture me-5">
+                <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
+            </a>
+        {% else %}
+            <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
+        {% endif %}
         <div>
             <h1>{{ user.profile }}</h1>
             <p>Joined: {{ user.date_joined|date:"d F Y" }}</p>

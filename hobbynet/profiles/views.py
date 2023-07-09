@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
+from django.views.generic import FormView
 
 UserModel: User = get_user_model()
 
@@ -22,8 +23,21 @@ def profile_details(request, pk, slug):
     })
 
 
-class ProfileEdit:
-    pass
+# TODO: add login required mixin
+class ProfileEdit(FormView):
+    """ This function will serve both the topic settings and profile settings,
+    they are pretty similar, so we could manage with one common form,
+    but also for profile will add extra stuff in the form"""
+    # TODO: complete profile edit
+    template_name = 'profiles/edit.html'
+
+    def get_context_data(self):
+        # TODO: return topic context
+        return {}
+
+    def get_form_class(self):
+        # TODO: return form class, depending on what is being edited
+        return None
 
 
 class ProfileDetails:
