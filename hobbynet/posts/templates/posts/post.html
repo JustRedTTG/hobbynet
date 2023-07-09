@@ -1,5 +1,26 @@
 {% extends 'base/base.html' %}
 
+
 {% block content %}
-    {% include 'base/post.html' %}
+
+    <div class="container-fluid container">
+        {% if 'back_url' in request.GET %}
+            <a class="btn btn-outline-primary m-s4 position-absolute" href="{{ request.GET.back_url }}">
+                < Go back
+            </a>
+        {% else %}
+            {% if request.META.HTTP_REFERER %}
+                <a class="btn btn-outline-primary m-s4 position-absolute" href="{{ request.META.HTTP_REFERER }}">
+                    < Go back
+                </a>
+            {% endif %}
+        {% endif %}
+
+        <div class="inline-flex text-center">
+            {% include 'base/display_name.html' with display_name=post.user.profile.display_name topic_display_name=post.topic.display_name %}
+            Made a post on
+            {{ post.topic.title }}
+        </div>
+    </div>
+    {% include 'base/post.html' with href_disable=1 %}
 {% endblock %}

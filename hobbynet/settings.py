@@ -51,6 +51,11 @@ MIDDLEWARE = [
     'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
+if DEBUG:
+    del MIDDLEWARE[0]
+    del MIDDLEWARE[-1]
+
+
 ROOT_URLCONF = 'hobbynet.urls'
 
 TEMPLATES = [

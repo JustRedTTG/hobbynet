@@ -1,0 +1,8 @@
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.hidden_a{
+    color: #333; /* Set your desired text color */
+    text-decoration: none; /* Remove underline if desired */
+}

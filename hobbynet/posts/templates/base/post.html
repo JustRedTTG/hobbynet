@@ -3,10 +3,10 @@
 <div class="card container-sm my-4 px-0">
     <div class="card-header">
         <div class="d-flex align-items-center">
-            <img {% include 'base/display_profile_picture.html' with user=user topic=post.topic %}
+            <img {% include 'base/display_profile_picture.html' with user=post.user topic=post.topic %}
                     class="rounded-circle me-2" width="40" height="40">
             <h6 class="mb-0 mx-2">
-                {% include 'base/display_name.html' with display_name=user.profile.display_name topic_display_name=post.topic.display_name %}
+                {% include 'base/display_name.html' with display_name=post.user.profile.display_name topic_display_name=post.topic.display_name %}
             </h6>
             <span class="ms-auto">
                 {% if post.visibility != 'public' %}
@@ -17,16 +17,20 @@
         </div>
     </div>
     <div class="card-body">
-        <a href="{% url 'post_details' post.user.pk post.user.profile.slug post.topic.pk post.pk %}">
-            <div>
-                <h5 class="card-title">{{ post.title }}</h5>
-                <p class="card-text">{{ post.content }}</p>
-                {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="User Image"
-                         class="img-fluid mx-auto d-block mb-3" style="max-height: 500px;">
-                {% endif %}
-            </div>
-        </a>
+        {% if href_disable != 1 %}
+            <a class="hidden_a"
+               href="{% url 'post_details' post.user.pk post.user.profile.slug post.topic.pk post.pk %}">
+        {% endif %}
+
+        <h4 class="card-title">{{ post.title }}</h4>
+        <p class="card-text">{{ post.content }}</p>
+        {% if post.image %}
+            <img src="{{ post.image.url }}" alt="User Image"
+                 class="img-fluid mx-auto d-block mb-3" style="max-height: 500px;">
+        {% endif %}
+        {% if href_disable != 1 %}
+            </a>
+        {% endif %}
         <div class="d-flex justify-content-start align-items-center">
             <a type="button" class="btn btn-sm" href="#">
                 <img src="{% static "images/icons/like.svg" %}" alt="Like" width="20" height="20">
