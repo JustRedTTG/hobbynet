@@ -12,7 +12,6 @@
         </div>
     </div>
     <div id="profile-topics" class="container-fluid">
-
         <ul class="nav nav-tabs">
             {% for topic in user.topic_set.all %}
                 {% if topic.visibility == 'public' or request.user == topic.user %}
@@ -23,7 +22,6 @@
                 {% endif %}
             {% endfor %}
         </ul>
-
         <div class="tab-content">
             {% for topic in user.topic_set.all %}
                 {% if topic.visibility == 'public' or request.user == topic.user %}
@@ -44,6 +42,4 @@
             <h1 class="mt-5 text-center">{{ user.profile }} has no topics.</h1>
         {% endif %}
     </div>
-
-
 {% endblock %}
