@@ -10,6 +10,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import FormView
 
 from hobbynet.common.forms import DisplayNameFormRequired, DisplayNameForm, TopicTitleFormRequired
+from hobbynet.profiles.models import Profile
+from hobbynet.topics.models import Topic
 
 UserModel: User = get_user_model()
 
@@ -29,25 +31,15 @@ def profile_details(request, pk, slug):
     })
 
 
-class ProfileForm(DisplayNameFormRequired, forms.Form):
-    profile_picture = forms.ImageField(required=True)
-    visibility = forms.ChoiceField(choices=getattr(settings, 'PRIVACY_MODEL_CHOICES', None), required=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['profile_picture'].widget.attrs['name'] = 'profile_picture'
-
+class ProfileForm(DisplayNameFormRequired, forms.ModelForm):
     class Meta:
-        model = 'profile'
+        model = Profile
+        fields = ['display_name', 'profile_picture', 'visibility']
 
 
-class TopicForm(TopicTitleFormRequired, DisplayNameForm, forms.Form):
-    profile_picture = forms.ImageField(required=False)
-    visibility = forms.ChoiceField(choices=getattr(settings, 'PRIVACY_MODEL_CHOICES', None), required=False)
-
+class TopicForm(TopicTitleFormRequired, DisplayNameForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['profile_picture'].widget.attrs['name'] = 'profile_picture'
         self.fields["display_name"].widget.attrs['placeholder'] = self.initial['hint_topic_display_name']
         self.fields["display_name"].validators.append(self.validate_profile_display_name)
 
@@ -56,7 +48,8 @@ class TopicForm(TopicTitleFormRequired, DisplayNameForm, forms.Form):
             raise ValidationError("The topic display name has to be different from the profile display name")
 
     class Meta:
-        model = 'topic'
+        model = Topic
+        fields = ['display_name', 'profile_picture', 'visibility', 'title']
 
 
 class ProfileEdit(LoginRequiredMixin, FormView):
@@ -98,7 +91,10 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         base = {
             'display_name': base_object.display_name,
             'visibility': base_object.visibility,
-            'profile_picture': base_object.profile_picture.url if base_object.profile_picture else base_object.profile_picture,
+            'profile_picture': base_object.profile_picture,
+
+            'user': base_object.user,
+            'pk': base_object.pk
         }
 
         if edit_type == 'profile':
@@ -123,15 +119,23 @@ class ProfileEdit(LoginRequiredMixin, FormView):
 
         return url
 
-    def form_valid(self, form):
-        edit_type, topic_pk = self.get_edit_information()
-        response = super().form_valid(form)
-        # form.cleaned_data['profile_picture'] = 'meow'
-        print(form.cleaned_data['profile_picture'], self.request.FILES)
-        if edit_type == 'topic':
-            self.request.user.topic_set \
-                .filter(pk=topic_pk).update(**form.cleaned_data)
-        return response
+    def form_valid(self, form: TopicForm):
+        edit_type, _ = self.get_edit_information()
+        form.instance.user = form.initial['user']
+        pk = form.instance.pk = form.initial['pk']
+
+        if edit_type == 'profile':
+            obj = Profile.objects.get(pk=pk)
+        elif edit_type == 'topic':
+            obj = Topic.objects.get(pk=pk)
+        else:
+            obj = None
+        if obj and obj.profile_picture:
+            obj.profile_picture.delete()
+
+        form.save()
+
+        return super().form_valid(form)
 
 
 @login_required

@@ -25,6 +25,7 @@ $(document).ready(function () {
     $('#id_profile_picture_clear').on('click', function () {
         // Reset the file input element
         $('#id_profile_picture').val(null);
+        $('#profile_picture-clear_id').prop('checked', true);
         toggleClearProfilePicture(false);
         $("#id_profile_picture_image").attr("src", static_src_blank);
     });

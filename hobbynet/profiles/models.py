@@ -8,7 +8,7 @@ UserModel = get_user_model()
 
 
 def profile_image_generator(instance, filename):
-    return f'user_profile_pictures/{instance.user_id}_{instance.slug}/{filename}'
+    return f'user_profile_pictures/{instance.user_id}/{filename}'
 
 
 ProfilePictureMixin = profile_picture_class_generator(profile_image_generator)
