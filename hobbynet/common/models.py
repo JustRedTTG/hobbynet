@@ -1,16 +1,29 @@
 import random
 from django.core.files.base import ContentFile
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.conf import settings
+
 from django_backblaze_b2 import BackblazeB2Storage
 import py_avataaars as pa
 
-
 # Create your models here.
+
+DISPLAY_NAME_ARGS = {
+    'max_length': 30,
+    'validators': [MinLengthValidator(6)]
+}
+
+TITLE_ARGS = {
+    'max_length': 30,
+    'validators': [MinLengthValidator(8)]
+}
+
 
 class Visibility(models.Model):
     visibility = models.CharField(
-        null=True, blank=True,
+        default='private',
+        blank=True,
         max_length=10,
         choices=getattr(settings, 'PRIVACY_MODEL_CHOICES', None))
 
@@ -20,8 +33,38 @@ class Visibility(models.Model):
 
 class VisibilityRequired(models.Model):
     visibility = models.CharField(
+        default='private',
         max_length=10,
         choices=getattr(settings, 'PRIVACY_MODEL_CHOICES', None))
+
+    class Meta:
+        abstract = True
+
+
+class DisplayName(models.Model):
+    display_name = models.CharField(
+        null=True,
+        blank=True,
+        **DISPLAY_NAME_ARGS
+    )
+
+    class Meta:
+        abstract = True
+
+
+class DisplayNameRequired(models.Model):
+    display_name = models.CharField(
+        **DISPLAY_NAME_ARGS
+    )
+
+    class Meta:
+        abstract = True
+
+
+class TopicTitleRequired(models.Model):
+    title = models.CharField(
+        **TITLE_ARGS
+    )
 
     class Meta:
         abstract = True

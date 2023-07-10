@@ -1,0 +1,59 @@
+{% load static %}
+
+<div class="card container-sm my-4 px-0">
+    <div class="card-header">
+        <div class="d-flex align-items-center">
+            <a href="{% url 'profile_details' pk=post.user.profile.pk slug=post.user.profile.slug %}?topic={{ post.topic.pk }}">
+                <img {% include 'base/display_profile_picture.html' with user=post.user topic=post.topic %}
+                        class="rounded-circle me-2" width="40" height="40">
+            </a>
+            <h6 class="mb-0 mx-2">
+                {% include 'base/display_name.html' with display_name=post.user.profile.display_name topic_display_name=post.topic.display_name %}
+            </h6>
+            <span class="ms-auto">
+                {% if post.visibility != 'public' %}
+                    <img src="{% static "images/icons/private.svg" %}" alt="Private post" width="15" height="15">
+                {% endif %}
+                <sub class="ms-1">from "{{ post.topic.title }}"</sub>
+            </span>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if href_disable != 1 %}
+            <a class="hidden_a"
+               href="{% url 'post_details' post.user.pk post.user.profile.slug post.topic.pk post.pk %}">
+        {% endif %}
+
+        <h4 class="card-title">{{ post.title }}</h4>
+        <p class="card-text">{{ post.content }}</p>
+        {% if post.image %}
+            <img src="{{ post.image.url }}" alt="User Image"
+                 class="img-fluid mx-auto d-block mb-3" style="max-height: 500px;">
+        {% endif %}
+        {% if href_disable != 1 %}
+            </a>
+        {% endif %}
+        <div class="d-flex justify-content-start align-items-center">
+            <a type="button" class="btn btn-sm" href="#">
+                <img src="{% static "images/icons/like.svg" %}" alt="Like" width="20" height="20">
+            </a>
+            <a type="button" class="btn btn-sm" href="#">
+                <img src="{% static "images/icons/share.svg" %}" alt="Share" width="20" height="20">
+            </a>
+            <a type="button" class="btn btn-sm" href="#">
+                <img src="{% static "images/icons/comment.svg" %}" alt="Comment" width="20" height="20">
+            </a>
+            <a type="button" class="btn btn-sm ms-auto" href="#">
+                <img src="{% static "images/icons/edit.svg" %}" alt="Comment" width="20" height="20">
+            </a>
+        </div>
+        <div class="mt-3">
+            {% for comment in post.comment_set %}
+                {% include 'posts/comment.html' with comment=comment %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card-footer text-muted text-right">
+        {{ post.date_created|date:"d M Y H:m" }}
+    </div>
+</div>

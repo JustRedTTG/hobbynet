@@ -51,6 +51,11 @@ MIDDLEWARE = [
     'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
+if DEBUG:
+    del MIDDLEWARE[0]
+    del MIDDLEWARE[-1]
+
+
 ROOT_URLCONF = 'hobbynet.urls'
 
 TEMPLATES = [
@@ -148,7 +153,7 @@ CACHES = {
     },
 }
 
-if DEBUG_SERVER:
+if DEBUG:
     CACHES['default'] = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
@@ -163,3 +168,4 @@ BACKBLAZE_CONFIG = {
 CSRF_TRUSTED_ORIGINS = [
     'https://hobbynet.redttg.com'
 ]
+

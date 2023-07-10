@@ -1,8 +1,16 @@
 {% extends 'base/base.html' %}
+{% load get_topic_active %}
+{% load static %}
 
 {% block content %}
     <div class="d-flex mb-4 px-5 profile-header">
-        <img {% include 'base/display_profile_picture.html' with user=user %} class="me-5">
+        {% if request.user == user %}
+            <a href="{% url 'profile_edit' %}" class="profile-picture me-5">
+                <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
+            </a>
+        {% else %}
+            <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
+        {% endif %}
         <div>
             <h1>{{ user.profile }}</h1>
             <p>Joined: {{ user.date_joined|date:"d F Y" }}</p>
@@ -11,25 +19,23 @@
         </div>
     </div>
     <div id="profile-topics" class="container-fluid">
-
         <ul class="nav nav-tabs">
             {% for topic in user.topic_set.all %}
                 {% if topic.visibility == 'public' or request.user == topic.user %}
                     <li class="nav-item">
-                        <a class="nav-link {% if forloop.counter == 1 %}active{% endif %}" href="#{{ forloop.counter }}"
+                        <a class="nav-link {% get_topic_active topic request.GET %}" href="#{{ forloop.counter }}"
                            data-bs-toggle="tab">{{ topic.title }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
         </ul>
-
         <div class="tab-content">
             {% for topic in user.topic_set.all %}
                 {% if topic.visibility == 'public' or request.user == topic.user %}
-                    <div class="tab-pane {% if forloop.counter == 1 %}active{% endif %}" id="{{ forloop.counter }}">
+                    <div class="tab-pane {% get_topic_active topic request.GET %}" id="{{ forloop.counter }}">
                         {% for post in topic.post_set.all %}
                             {% if post.visibility == 'public' or request.user == post.user %}
-                                {% include 'posts/post.html' with post=post class='fluid' img_class='fluid' %}
+                                {% include 'base/post.html' with post=post class='fluid' %}
                             {% endif %}
                         {% endfor %}
                         {% if topic.post_set.count < 1 %}
@@ -43,6 +49,4 @@
             <h1 class="mt-5 text-center">{{ user.profile }} has no topics.</h1>
         {% endif %}
     </div>
-
-
 {% endblock %}

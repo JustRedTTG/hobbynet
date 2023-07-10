@@ -1,0 +1,18 @@
+#id_profile_picture {
+    display: none;
+}
+
+#id_profile_picture_image {
+    height: 200px;
+    aspect-ratio: 1/1;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+.profile_edit_text input, .profile_visibility_picker select {
+    width: 300px;
+}
+
+.profile_visibility_picker select {
+
+}

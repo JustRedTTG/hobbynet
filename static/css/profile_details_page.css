@@ -10,6 +10,23 @@
     font-size: 5rem;
 }
 
+.profile-picture {
+    width: 250px;
+    height: 250px;
+    .rounded-5;
+    object-fit: cover;
+}
+
+.profile-picture-image {
+    width: 250px;
+    height: 250px;
+}
+
+.profile-display-name {
+    opacity: .5;
+    font-weight: bold;
+}
+
 /*.profile-topics .nav-link {*/
 /*    color: var(--bs-nav-link-color);*/
 /*}*/
