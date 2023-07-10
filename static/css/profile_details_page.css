@@ -22,6 +22,11 @@
     height: 250px;
 }
 
+.profile-display-name {
+    opacity: .5;
+    font-weight: bold;
+}
+
 /*.profile-topics .nav-link {*/
 /*    color: var(--bs-nav-link-color);*/
 /*}*/

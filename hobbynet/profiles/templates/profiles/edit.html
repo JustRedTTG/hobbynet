@@ -1,1 +1,159 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <ul class="nav flex-column nav-pills">
+                    {% for topic in request.user.topic_set.all %}
+                        <li class="nav-item border my-1 rounded">
+                            <a class="nav-link {% if topic.pk == topic_pk %}active{% endif %}"
+                               href="?type=topic&topic={{ topic.pk }}">
+                                {% include 'base/display_name.html' with display_name=topic.display_name topic_display_name=topic.title %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-sm-9">
+                <form method="POST">
+                    {# Profile Picture #}
+                    <div class="container mb-5">
+                        <div class="row">
+                            <div class="col-sm d-flex flex-column">
+                                <div class="d-flex col mt-0">
+                                    <h2>Profile Picture</h2>
+                                </div>
+                                <div class="d-flex col">
+                                    <p>
+                                        By clearing the profile picture for the topic it will not be used,
+                                        instead the profile picture on your profile will be used
+                                    </p>
+                                </div>
+                                <div class="d-flex col mb-0">
+                                    <div class="col d-flex align-items-center">
+                                        <a id="id_profile_picture_clear" class="btn btn-outline-danger">Clear topic
+                                            profile picture</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm d-flex align-items-end justify-content-end">
+                                {{ form.profile_picture }}
+                                <img id="id_profile_picture_image"
+                                     src="{% if form.profile_picture.value %}
+                                          {{ form.profile_picture.value }}
+                                      {% else %}
+                                          {% static 'images/icons/blank_image_add.svg' %}
+                                      {% endif %}"
+                                     alt="Profile Picture"
+                                     class="border rounded-2">
+                                {{ form.profile_picture.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    {# Display Name #}
+                    <div class="container mb-5">
+                        <div class="row">
+                            <div class="col-sm d-flex flex-column">
+                                <div class="d-flex col mt-0">
+                                    <h2>Display Name</h2>
+                                </div>
+                                <div class="d-flex col">
+                                    <p>
+                                        If you leave the display name empty your profile name will be displayed instead
+                                    </p>
+                                </div>
+                                <div class="d-flex col">
+                                    {{ form.display_name.errors }}
+                                </div>
+                            </div>
+                            <div class="profile_edit_text col-sm d-flex align-items-end justify-content-end">
+                                {{ form.display_name }}
+                            </div>
+                        </div>
+                    </div>
+                    {# Display Name #}
+                    <div class="container mb-5">
+                        <div class="row">
+                            <div class="col-sm d-flex flex-column">
+                                <div class="d-flex col mt-0">
+                                    <h2>Display Name</h2>
+                                </div>
+                                <div class="d-flex col">
+                                    {{ form.visibility.errors }}
+                                </div>
+                            </div>
+                            <div class="profile_visibility_picker col-sm d-flex align-items-end justify-content-end">
+                                {{ form.visibility }}
+                            </div>
+                        </div>
+                    </div>
+                    {# Title #}
+                    {% if edit_type == 'topic' %}
+                        <div class="container mb-5">
+                            <div class="row">
+                                <div class="col-sm d-flex flex-column">
+                                    <div class="d-flex col mt-0">
+                                        <h2>Topic Title</h2>
+                                    </div>
+                                    <div class="d-flex col">
+                                        {{ form.title.errors }}
+                                    </div>
+                                </div>
+                                <div class="profile_edit_text col-sm d-flex align-items-end justify-content-end">
+                                    {{ form.title }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% csrf_token %}
+                    <div class="container d-flex justify-content-end">
+                        <button class="btn btn-success px-4 py-2 me-4" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            function toggleClearProfilePicture(shouldShow) {
+                if (shouldShow) {
+                    $(id_profile_picture_clear).show();
+                } else {
+                    $(id_profile_picture_clear).hide();
+                }
+            }
+
+            var static_src_blank = "{% static 'images/icons/blank_image_add.svg' %}";
+
+            $("#id_profile_picture_image").click(function () {
+                $("#id_profile_picture").click();
+            });
+
+            $("#id_profile_picture").change(function () {
+                var file = this.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $("#id_profile_picture_image").attr("src", e.target.result);
+                    toggleClearProfilePicture(true);
+                };
+
+                reader.readAsDataURL(file);
+            });
+            $('#id_profile_picture_clear').on('click', function () {
+                // Reset the file input element
+                $('#id_profile_picture').val(null);
+                toggleClearProfilePicture(false);
+                $("#id_profile_picture_image").attr("src", static_src_blank);
+            });
+            if ($("#id_profile_picture").get(0).files.length === 0 && $("#id_profile_picture_image").attr("src").includes(static_src_blank)) {
+                toggleClearProfilePicture(false);
+            }
+        });
+    </script>
+{% endblock %}

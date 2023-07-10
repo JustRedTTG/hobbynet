@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django_backblaze_b2 import BackblazeB2Storage
 
-from hobbynet.common.models import VisibilityRequired, profile_picture_class_generator
+from hobbynet.common.models import VisibilityRequired, profile_picture_class_generator, DisplayName, TopicTitleRequired
 
 UserModel = get_user_model()
 
@@ -15,12 +15,9 @@ def topic_image_generator(instance, filename):
 ProfilePictureMixin = profile_picture_class_generator(topic_image_generator, blank=True)
 
 
-class Topic(ProfilePictureMixin, VisibilityRequired, models.Model):
+class Topic(TopicTitleRequired, DisplayName, ProfilePictureMixin, VisibilityRequired, models.Model):
     upload_to = topic_image_generator
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
-
-    title = models.CharField(max_length=20)
-    display_name = models.CharField(max_length=20, null=True, blank=True)
 
     def __repr__(self):
         return self.title
