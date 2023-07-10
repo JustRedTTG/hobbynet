@@ -6,7 +6,7 @@ from django.shortcuts import render
 import django.views.generic as views
 from django.urls import reverse_lazy
 
-from hobbynet.common.models import DisplayNameFormRequired
+from hobbynet.common.forms import DisplayNameFormRequired
 from hobbynet.profiles.models import Profile
 
 UserModel = get_user_model()

@@ -3,7 +3,7 @@ from django.core.files.base import ContentFile
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.conf import settings
-from django import forms
+
 from django_backblaze_b2 import BackblazeB2Storage
 import py_avataaars as pa
 
@@ -61,37 +61,8 @@ class DisplayNameRequired(models.Model):
         abstract = True
 
 
-class DisplayNameForm(forms.Form):
-    display_name = forms.CharField(
-        required=False,
-        **DISPLAY_NAME_ARGS
-    )
-
-    class Meta:
-        abstract = True
-
-
-class DisplayNameFormRequired(forms.Form):
-    display_name = forms.CharField(
-        required=True,
-        **DISPLAY_NAME_ARGS
-    )
-
-    class Meta:
-        abstract = True
-
-
 class TopicTitleRequired(models.Model):
     title = models.CharField(
-        **TITLE_ARGS
-    )
-
-    class Meta:
-        abstract = True
-
-class TopicTitleFormRequired(forms.Form):
-    title = forms.CharField(
-        required=True,
         **TITLE_ARGS
     )
 

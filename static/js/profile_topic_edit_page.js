@@ -1,13 +1,11 @@
 $(document).ready(function () {
     function toggleClearProfilePicture(shouldShow) {
         if (shouldShow) {
-            $(id_profile_picture_clear).show();
+            $('#id_profile_picture_clear').show();
         } else {
-            $(id_profile_picture_clear).hide();
+            $('#id_profile_picture_clear').hide();
         }
     }
-
-    var static_src_blank = "{% static 'images/icons/blank_image_add.svg' %}";
 
     $("#id_profile_picture_image").click(function () {
         $("#id_profile_picture").click();

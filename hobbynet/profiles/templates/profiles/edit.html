@@ -116,4 +116,9 @@
         </div>
     </div>
 {% endblock %}
-{% block javascript %}<script src="{% static 'js/profile_topic_edit_page.js' %}"></script>{% endblock %}
+{% block javascript %}
+    <script>
+        const static_src_blank = "{% static 'images/icons/blank_image_add.svg' %}";
+    </script>
+    <script src="{% static 'js/profile_topic_edit_page.js' %}"></script>
+{% endblock %}

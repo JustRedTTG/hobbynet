@@ -9,7 +9,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 from django.views.generic import FormView
 
-from hobbynet.common.models import DisplayNameFormRequired, DisplayNameForm, TopicTitleFormRequired
+from hobbynet.common.forms import DisplayNameFormRequired, DisplayNameForm, TopicTitleFormRequired
 
 UserModel: User = get_user_model()
 
@@ -33,6 +33,10 @@ class ProfileForm(DisplayNameFormRequired, forms.Form):
     profile_picture = forms.ImageField(required=True)
     visibility = forms.ChoiceField(choices=getattr(settings, 'PRIVACY_MODEL_CHOICES', None), required=True)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['profile_picture'].widget.attrs['name'] = 'profile_picture'
+
     class Meta:
         model = 'profile'
 
@@ -43,6 +47,7 @@ class TopicForm(TopicTitleFormRequired, DisplayNameForm, forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['profile_picture'].widget.attrs['name'] = 'profile_picture'
         self.fields["display_name"].widget.attrs['placeholder'] = self.initial['hint_topic_display_name']
         self.fields["display_name"].validators.append(self.validate_profile_display_name)
 
@@ -119,9 +124,14 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         return url
 
     def form_valid(self, form):
-        edit_type, topic = self.get_edit_information()
-        a = super().form_valid(form)
-        return a
+        edit_type, topic_pk = self.get_edit_information()
+        response = super().form_valid(form)
+        # form.cleaned_data['profile_picture'] = 'meow'
+        print(form.cleaned_data['profile_picture'], self.request.FILES)
+        if edit_type == 'topic':
+            self.request.user.topic_set \
+                .filter(pk=topic_pk).update(**form.cleaned_data)
+        return response
 
 
 @login_required
