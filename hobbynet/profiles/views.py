@@ -91,7 +91,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
             except UserModel.DoesNotExist:
                 user = AnonymousUser()
                 user.pk = self.admin_selection
-
+        
         return edit_type, topic, admin, user
 
     def get_form_class(self):
@@ -140,7 +140,6 @@ class ProfileEdit(LoginRequiredMixin, FormView):
                 else:
                     url = reverse_lazy('goodbye')
             return url
-
 
         if self.request.GET:
             # Create a new QueryDict with the existing parameters
