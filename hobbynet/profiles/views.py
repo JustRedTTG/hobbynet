@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django import forms
 from django.core.exceptions import ValidationError
-from django.http import Http404
+from django.http import Http404, QueryDict
 from django.shortcuts import render, redirect
 from django.views.generic import FormView
 
@@ -123,9 +123,13 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         url = self.request.path  # Start with the current path
 
         # Check if the request has GET parameters
+
         if self.request.GET:
             # Create a new QueryDict with the existing parameters
-            params = self.request.GET.copy()
+            if 'delete' not in self.request.POST:
+                params = self.request.GET.copy()
+            else:
+                params = QueryDict(mutable=True)
             params['success'] = '1'  # Add 'success' parameter
 
             # Append the updated query string to the URL
@@ -147,7 +151,10 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         if obj and obj.profile_picture:
             obj.profile_picture.delete()
 
-        form.save()
+        if 'delete' in self.request.POST:
+            form.instance.delete()
+        else:
+            form.save()
 
         return super().form_valid(form)
 
