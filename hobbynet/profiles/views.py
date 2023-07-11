@@ -1,12 +1,13 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django import forms
 from django.core.exceptions import ValidationError
-from django.http import Http404
+from django.http import Http404, QueryDict
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from hobbynet.common.forms import DisplayNameFormRequired, DisplayNameForm, TopicTitleFormRequired
@@ -82,7 +83,15 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         topic = self.request.GET.get('topic', None)
         topic = int(topic) if topic else None
         admin = self.request.user.is_superuser
-        user = self.request.user if not self.admin_selection else UserModel.objects.get(pk=self.admin_selection)
+        if not self.admin_selection:
+            user = self.request.user
+        else:
+            try:
+                user = UserModel.objects.get(pk=self.admin_selection)
+            except UserModel.DoesNotExist:
+                user = AnonymousUser()
+                user.pk = self.admin_selection
+        
         return edit_type, topic, admin, user
 
     def get_form_class(self):
@@ -120,9 +129,18 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         return base
 
     def get_success_url(self):
+        edit_type, _, _, user = self.get_edit_information()
         url = self.request.path  # Start with the current path
 
         # Check if the request has GET parameters
+        if 'delete' in self.request.POST:
+            if edit_type == 'profile':
+                if user.pk != self.request.user.pk:
+                    url = reverse_lazy('profile_edit')
+                else:
+                    url = reverse_lazy('goodbye')
+            return url
+
         if self.request.GET:
             # Create a new QueryDict with the existing parameters
             params = self.request.GET.copy()
@@ -147,7 +165,10 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         if obj and obj.profile_picture:
             obj.profile_picture.delete()
 
-        form.save()
+        if 'delete' in self.request.POST:
+            form.instance.delete()
+        else:
+            form.save()
 
         return super().form_valid(form)
 
