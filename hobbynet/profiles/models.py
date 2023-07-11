@@ -25,3 +25,6 @@ class Profile(DisplayNameRequired, ProfilePictureMixin, VisibilityRequired, mode
 
     def __str__(self):
         return self.display_name
+
+    def delete(self, using=None, keep_parents=False):
+        return self.user.delete(using, keep_parents)
