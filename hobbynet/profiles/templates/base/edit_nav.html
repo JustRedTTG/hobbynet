@@ -1,0 +1,18 @@
+{% load urltool %}
+
+<ul class="nav flex-column nav-pills">
+    <li class="nav-item border my-1 rounded">
+        <a class="nav-link {% if edit_type == 'profile' %}active{% endif %}"
+           href="?type=profile">
+            Profile Info
+        </a>
+    </li>
+    {% for topic in user.topic_set.all %}
+        <li class="nav-item border my-1 rounded">
+            <a class="nav-link {% if topic.pk == topic_pk %}active{% endif %}"
+               href="?type=topic&topic={{ topic.pk }}">
+                {% include 'base/display_name.html' with display_name=topic.display_name topic_display_name=topic.title %}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
