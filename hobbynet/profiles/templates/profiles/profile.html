@@ -8,6 +8,10 @@
             <a href="{% url 'profile_edit' %}" class="profile-picture me-5">
                 <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
             </a>
+        {% elif request.user.is_superuser %}
+            <a href="{% url 'profile_edit' %}?user={{ user.pk }}" class="profile-picture me-5">
+                <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
+            </a>
         {% else %}
             <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
         {% endif %}

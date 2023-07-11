@@ -59,32 +59,46 @@ class ProfileEdit(LoginRequiredMixin, FormView):
     # TODO: complete profile edit
     template_name = 'profiles/edit.html'
 
+    def __init__(self, *args, **kwargs):
+        self.admin_selection = None
+        super().__init__(*args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.admin_selection = int(kwargs.get('admin_selection', -1))
+        self.admin_selection = self.admin_selection if self.admin_selection > 0 else None
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['edit_type'], \
-            context['topic_pk'] = self.get_edit_information()
+            context['topic_pk'], admin, context['edited_user'] = self.get_edit_information()
+        if admin:
+            context['users'] = UserModel.objects.all()
+            context['admin_selection'] = self.admin_selection
         return context
 
     def get_edit_information(self):
         edit_type = self.request.GET.get('type', 'profile')
         topic = self.request.GET.get('topic', None)
         topic = int(topic) if topic else None
-        return edit_type, topic
+        admin = self.request.user.is_superuser
+        user = self.request.user if not self.admin_selection else UserModel.objects.get(pk=self.admin_selection)
+        return edit_type, topic, admin, user
 
     def get_form_class(self):
-        edit_type, topic = self.get_edit_information()
+        edit_type, _, _, _ = self.get_edit_information()
         if edit_type == 'profile':
             return ProfileForm
         elif edit_type == 'topic':
             return TopicForm
 
     def get_initial(self):
-        edit_type, topic = self.get_edit_information()
+        edit_type, topic, _, user = self.get_edit_information()
 
         if edit_type == 'profile':
-            base_object = self.request.user.profile
+            base_object = user.profile
         elif edit_type == 'topic':
-            base_object = self.request.user.topic_set.get(pk=topic)
+            base_object = user.topic_set.get(pk=topic)
         else:
             return {}
 
@@ -100,7 +114,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         if edit_type == 'profile':
             pass
         elif edit_type == 'topic':
-            base['hint_topic_display_name'] = self.request.user.profile.display_name
+            base['hint_topic_display_name'] = user.profile.display_name
             base['title'] = base_object.title
 
         return base
@@ -120,7 +134,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         return url
 
     def form_valid(self, form: TopicForm):
-        edit_type, _ = self.get_edit_information()
+        edit_type, _, _, _ = self.get_edit_information()
         form.instance.user = form.initial['user']
         pk = form.instance.pk = form.initial['pk']
 

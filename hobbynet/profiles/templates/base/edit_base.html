@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                {% block edit_before_nav %}
+                {% endblock %}
+                {% block edit_nav %}
+                    {% include 'base/edit_nav.html' with user=edited_user %}
+                {% endblock %}
+
+            </div>
+            <div class="col-sm-9">
+                <form method="POST" enctype="multipart/form-data">
+                    {% block edit_before_form %}
+                    {% endblock %}
+                    {% block edit_form %}
+                        {% include 'base/edit_form.html' with user=edited_user form=form edit_type=edit_type topic_pk=topic_pk %}
+                    {% endblock %}
+
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        const static_src_blank = "{% static 'images/icons/blank_image_add.svg' %}";
+    </script>
+    <script src="{% static 'js/profile_topic_edit_page.js' %}"></script>
+{% endblock %}
