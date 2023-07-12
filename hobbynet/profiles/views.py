@@ -49,6 +49,26 @@ class TopicForm(TopicTitleFormRequired, DisplayNameForm, forms.ModelForm):
         if value == self.initial['hint_topic_display_name']:
             raise ValidationError("The topic display name has to be different from the profile display name")
 
+    def __iter__(self):
+        for field_name, field in self.fields.items():
+            field.can_edit = self.check_field_permissions(field_name)
+            yield field_name, field
+
+    def check_field_permissions(self, field_name):
+        if self.fields.user.is_superuser:
+            return True
+        if not self.fields.user.is_staff:
+            return False
+
+        # Get the content type for the model associated with the form
+        content_type = ContentType.objects.get_for_model(self.Meta.model)
+
+        # Get the permission codename for the field
+        permission_codename = f'{content_type.app_label}.change_{content_type.model}_{field_name}'
+
+        # Check if the user has the required permission
+        return self.fields.user.has_perm(permission_codename)
+
     class Meta:
         model = Topic
         fields = ['display_name', 'profile_picture', 'visibility', 'title']
