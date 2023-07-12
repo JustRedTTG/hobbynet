@@ -25,7 +25,7 @@ def profile_details(request, pk, slug):
             and
             not (request.user.is_superuser
                  or
-                 (request.user.is_staff and request.user.has_perm('profiles_profile_view')))
+                 (request.user.is_staff and request.user.has_perm('profiles.view_profile')))
             and
             user.profile.visibility != 'public'
     ):
