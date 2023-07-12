@@ -82,7 +82,8 @@ class ProfileForm(DisplayNameFormRequired, Editing, forms.ModelForm):
 
 
 class TopicForm(Editing, BasicTopicForm, forms.ModelForm):
-    pass
+    class Meta(BasicTopicForm.Meta):
+        pass
 
 
 class ProfileEdit(LoginRequiredMixin, FormView):
