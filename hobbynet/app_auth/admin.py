@@ -6,4 +6,31 @@ UserModel = get_user_model()
 
 # Register your models here.
 
-admin.site.register(UserModel, UserAdmin)
+class CustomUserAdmin(UserAdmin):
+    search_fields = ('email',)
+    list_display = ('email', 'is_staff')
+    list_filter = ('is_staff', 'is_superuser', 'groups')
+    filter_horizontal = ('groups', 'user_permissions',)
+    ordering = ('email',)
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        # ("Personal info", {"fields": ("email",)}),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                ),
+            },
+        ),
+        ("Important dates", {"fields": ("date_joined",)}),
+    )
+
+    class Meta:
+        model = UserModel
+
+
+admin.site.register(UserModel, CustomUserAdmin)
