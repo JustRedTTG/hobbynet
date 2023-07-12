@@ -1,8 +1,8 @@
 import django.contrib.auth.views as auth_views
 import django.contrib.auth.forms as auth_forms
 from django import forms
-from django.contrib.auth import get_user_model, login
-from django.shortcuts import render
+from django.contrib.auth import get_user_model, login, logout
+from django.shortcuts import render, redirect
 import django.views.generic as views
 from django.urls import reverse_lazy
 
@@ -45,3 +45,7 @@ class RegisterAccountView(views.CreateView):
 
 class LoginAccountView(auth_views.LoginView):
     template_name = 'app_auth/login.html'
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

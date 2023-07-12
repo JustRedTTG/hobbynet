@@ -4,10 +4,14 @@
 {% url 'home' as home_url %}
 {% url 'register' as register_url %}
 {% url 'login' as login_url %}
+{% url 'logout' as logout_url %}
 
 {#Profile URLS#}
 {% url 'profile_details_self' as profile_url %}
 {% url 'home' as make_post_url %}
+{% url 'home' as make_topic_url %}
+
+{% static 'images/icons/logout.svg' as logout_image %}
 
 <nav class="navbar navbar-expand-sm mb-5">
     <div class="container-fluid">
@@ -23,9 +27,11 @@
             {% if request.user.is_authenticated %}
             <ul class="navbar-nav me-auto">
                 {% include 'base/navbar_item.html' with href=make_post_url text='Make Post' %}
+                {% include 'base/navbar_item.html' with href=make_topic_url text='Make Topic' %}
             </ul>
             <ul class="navbar-nav ms-auto">
                 {% include 'base/navbar_item.html' with href=profile_url text=request.user.profile %}
+                {% include 'base/navbar_item.html' with href=logout_url image=logout_image text='Logout' %}
             </ul>
             {% else %}
             <ul class="navbar-nav ms-auto">

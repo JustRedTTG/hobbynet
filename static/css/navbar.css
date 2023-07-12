@@ -3,6 +3,10 @@
     border-radius: 5px;
 }
 
+.navbar-height {
+    height: 20px;
+}
+
 :root [data-bs-theme="dark"] {
     --navbar-shadow-color: black;
 }
