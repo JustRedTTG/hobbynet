@@ -1,5 +1,9 @@
-<li class="nav-item">
-    <a class="nav-link active" href="{{ href }}">
-        <img src="{{ image }}" alt="{{ text }}" class="navbar-height">
-    </a>
+<li class="nav-item"
+        {% if image and text or tooltip %}
+    data-toggle="tooltip"
+    data-bs-placement="{% if tooltip_direction %}{{ tooltip_direction }}{% else %}bottom{% endif %}"
+    title="{% if tooltip %}{{ tooltip }}{% else %}{{ text }}{% endif %}"{% endif %}>
+<a class="nav-link active" href="{{ href }}">
+    <img src="{{ image }}" alt="{{ text }}" class="navbar-height">
+</a>
 </li>

@@ -5,11 +5,19 @@
 {% block content %}
     <div class="d-flex mb-4 px-5 profile-header">
         {% if request.user == user %}
-            <a href="{% url 'profile_edit' %}" class="profile-picture me-5">
+            <a href="{% url 'profile_edit' %}"
+               class="profile-picture me-5"
+               data-toggle="tooltip"
+               data-bs-placement="bottom"
+               title="Edit your profile">
                 <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
             </a>
         {% elif request.user.is_superuser or request.user.is_staff and perms.profiles.change_profile %}
-            <a href="{% url 'profile_edit_admin' user.pk %}" class="profile-picture me-5">
+            <a href="{% url 'profile_edit_admin' user.pk %}"
+               class="profile-picture me-5"
+               data-toggle="tooltip"
+               data-bs-placement="bottom"
+               title="You have permission to edit this profile">
                 <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
             </a>
         {% else %}
@@ -34,7 +42,10 @@
                     </li>
                 {% endif %}
             {% endfor %}
-            <li class="nav-item">
+            <li class="nav-item"
+                data-toggle="tooltip"
+                data-bs-placement="auto"
+                title="Add topic">
                 <a class="nav-link text-success fw-bold fs-4 py-0"
                    href="{% url 'topic_create' %}">
                     +
