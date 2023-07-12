@@ -10,7 +10,7 @@ UserModel = get_user_model()
 
 
 def topic_image_generator(instance, filename):
-    return f'topic_profile_pictures/{instance.user_id}/{instance.id}/{filename}'
+    return f'topic_profile_pictures/{instance.user_id}/{filename}'
 
 
 ProfilePictureMixin = profile_picture_class_generator(topic_image_generator, blank=True)

@@ -12,7 +12,7 @@ UserModel = get_user_model()
 
 
 def posts_image_generator(instance, filename):
-    return f'posts/{instance.user_id}_{instance.user.profile.slug}/{instance.topic_id}/{instance.id}/{filename}'
+    return f'post_images/{instance.user_id}/{instance.topic_id}/{filename}'
 
 
 class Post(Visibility, models.Model):
