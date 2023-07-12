@@ -9,7 +9,8 @@
 {#Profile URLS#}
 {% url 'profile_details_self' as profile_url %}
 {% url 'home' as make_post_url %}
-{% url 'home' as make_topic_url %}
+
+{% url 'topic_create' as create_topic_url %}
 
 {% static 'images/icons/logout.svg' as logout_image %}
 
@@ -27,7 +28,7 @@
             {% if request.user.is_authenticated %}
             <ul class="navbar-nav me-auto">
                 {% include 'base/navbar_item.html' with href=make_post_url text='Make Post' %}
-                {% include 'base/navbar_item.html' with href=make_topic_url text='Make Topic' %}
+                {% include 'base/navbar_item.html' with href=create_topic_url text='Make Topic' %}
             </ul>
             <ul class="navbar-nav ms-auto">
                 {% include 'base/navbar_item.html' with href=profile_url text=request.user.profile %}
