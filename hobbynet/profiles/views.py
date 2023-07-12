@@ -22,8 +22,7 @@ UserModel: User = get_user_model()
 def profile_details(request, pk, slug, topic_pk=None, topic_slug=None):
     user = UserModel.objects.get(pk=pk)
     topic: Topic = user.topic_set.get(pk=topic_pk) if topic_pk else user.topic_set.first()
-    if topic is None:
-        return redirect('profile_details', pk=pk, slug=user.profile.slug)
+
     if not user or (
             request.user != user
             and
@@ -36,7 +35,8 @@ def profile_details(request, pk, slug, topic_pk=None, topic_slug=None):
         raise Http404("User profile doesn't exist")
     if user.profile.slug != slug:
         if topic:
-            return redirect('profile_details_topic', pk=pk, slug=user.profile.slug, topic_pk=topic.pk, topic_slug=topic.slug)
+            return redirect('profile_details_topic', pk=pk, slug=user.profile.slug, topic_pk=topic.pk,
+                            topic_slug=topic.slug)
         else:
             return redirect('profile_details', pk=pk, slug=user.profile.slug)
     return render(request, 'profiles/profile.html', context={
