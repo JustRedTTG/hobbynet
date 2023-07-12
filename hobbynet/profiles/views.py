@@ -23,6 +23,10 @@ def profile_details(request, pk, slug):
     if not user or (
             request.user != user
             and
+            (not request.user.is_superuser
+             or
+             (not request.user.is_staff and request.user.has_perm('profiles_profile_view')))
+            and
             user.profile.visibility != 'public'
     ):
         raise Http404("User profile doesn't exist")
@@ -88,6 +92,9 @@ class ProfileEdit(LoginRequiredMixin, FormView):
     def dispatch(self, request, *args, **kwargs):
         self.admin_selection = int(kwargs.get('admin_selection', -1))
         self.admin_selection = self.admin_selection if self.admin_selection > 0 else None
+        _, _, staff, _ = self.get_edit_information()
+        if not staff and self.admin_selection:
+            return redirect('profile_edit')
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -104,7 +111,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         topic = self.request.GET.get('topic', None)
         topic = int(topic) if topic else None
         staff = self.request.user.is_superuser or self.request.user.is_staff
-        if not self.admin_selection:
+        if not staff or not self.admin_selection:
             user = self.request.user
         else:
             try:
