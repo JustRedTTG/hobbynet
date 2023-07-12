@@ -14,12 +14,16 @@ from django.views.generic import FormView
 from hobbynet.common.forms import DisplayNameFormRequired, DisplayNameForm, TopicTitleFormRequired
 from hobbynet.profiles.models import Profile
 from hobbynet.topics.models import Topic
+from hobbynet.topics.forms import BasicTopicForm
 
 UserModel: User = get_user_model()
 
 
-def profile_details(request, pk, slug):
+def profile_details(request, pk, slug, topic_pk=None, topic_slug=None):
     user = UserModel.objects.get(pk=pk)
+    topic: Topic = user.topic_set.get(pk=topic_pk) if topic_pk else user.topic_set.first()
+    if topic is None:
+        return redirect('profile_details', pk=pk, slug=user.profile.slug)
     if not user or (
             request.user != user
             and
@@ -31,9 +35,13 @@ def profile_details(request, pk, slug):
     ):
         raise Http404("User profile doesn't exist")
     if user.profile.slug != slug:
-        return redirect('profile_details', pk=pk, slug=user.profile.slug)
+        if topic:
+            return redirect('profile_details_topic', pk=pk, slug=user.profile.slug, topic_pk=topic.pk, topic_slug=topic.slug)
+        else:
+            return redirect('profile_details', pk=pk, slug=user.profile.slug)
     return render(request, 'profiles/profile.html', context={
         'user': user,
+        'current_topic': topic
     })
 
 
@@ -73,19 +81,8 @@ class ProfileForm(DisplayNameFormRequired, Editing, forms.ModelForm):
         fields = ['display_name', 'profile_picture', 'visibility']
 
 
-class TopicForm(TopicTitleFormRequired, DisplayNameForm, Editing, forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["display_name"].widget.attrs['placeholder'] = self.initial['hint_topic_display_name']
-        self.fields["display_name"].validators.append(self.validate_profile_display_name)
-
-    def validate_profile_display_name(self, value):
-        if value == self.initial['hint_topic_display_name']:
-            raise ValidationError("The topic display name has to be different from the profile display name")
-
-    class Meta:
-        model = Topic
-        fields = ['display_name', 'profile_picture', 'visibility', 'title']
+class TopicForm(Editing, BasicTopicForm, forms.ModelForm):
+    pass
 
 
 class ProfileEdit(LoginRequiredMixin, FormView):

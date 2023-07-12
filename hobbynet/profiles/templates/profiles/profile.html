@@ -27,30 +27,40 @@
             {% for topic in user.topic_set.all %}
                 {% if topic.visibility == 'public' or request.user == topic.user %}
                     <li class="nav-item">
-                        <a class="nav-link {% get_topic_active topic request.GET %}" href="#{{ forloop.counter }}"
+                        <a class="nav-link {% if topic.pk == current_topic.pk %}active{% endif %}"
+                           href="{% url 'profile_details_topic' user.pk user.profile.slug topic.pk topic.slug %}"
                            data-bs-toggle="tab">{{ topic.title }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
         </ul>
         <div class="tab-content">
-            {% for topic in user.topic_set.all %}
-                {% if topic.visibility == 'public' or request.user == topic.user %}
-                    <div class="tab-pane {% get_topic_active topic request.GET %}" id="{{ forloop.counter }}">
-                        {% for post in topic.post_set.all %}
-                            {% if post.visibility == 'public' or request.user == post.user %}
-                                {% include 'base/post.html' with post=post class='fluid' %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if topic.post_set.count < 1 %}
-                            <h1 class="mt-5 text-center">{{ topic.title }} has no posts.</h1>
+            {% if current_topic.visibility == 'public' or request.user == current_topic.user %}
+                <div class="tab-pane active" id="{{ forloop.counter }}">
+                    {% for post in current_topic.post_set.all %}
+                        {% if post.visibility == 'public' or request.user == post.user %}
+                            {% include 'base/post.html' with post=post class='fluid' %}
                         {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
+                    {% endfor %}
+                    {% if current_topic.post_set.count < 1 %}
+                        <h1 class="mt-5 text-center">{{ current_topic.title }} has no posts.</h1>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
         {% if user.topic_set.count < 1 %}
             <h1 class="mt-5 text-center">{{ user.profile }} has no topics.</h1>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $('.nav-link').click(function (event) {
+                event.preventDefault(); // Prevent default behavior
+                window.location.href = $(this).attr('href'); // Manually navigate to the URL
+            });
+        });
+    </script>
 {% endblock %}
