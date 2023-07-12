@@ -28,11 +28,18 @@
                 {% if topic.visibility == 'public' or request.user == topic.user %}
                     <li class="nav-item">
                         <a class="nav-link {% if topic.pk == current_topic.pk %}active{% endif %}"
-                           href="{% url 'profile_details_topic' user.pk user.profile.slug topic.pk topic.slug %}"
-                           data-bs-toggle="tab">{{ topic.title }}</a>
+                           href="{% url 'profile_details_topic' user.pk user.profile.slug topic.pk topic.slug %}">
+                            {{ topic.title }}
+                        </a>
                     </li>
                 {% endif %}
             {% endfor %}
+            <li class="nav-item">
+                <a class="nav-link text-success fw-bold fs-4 py-0"
+                   href="{% url 'topic_create' %}">
+                    +
+                </a>
+            </li>
         </ul>
         <div class="tab-content">
             {% if current_topic.visibility == 'public' or request.user == current_topic.user %}
@@ -52,15 +59,4 @@
             <h1 class="mt-5 text-center">{{ user.profile }} has no topics.</h1>
         {% endif %}
     </div>
-{% endblock %}
-
-{% block javascript %}
-    <script>
-        $(document).ready(function () {
-            $('.nav-link').click(function (event) {
-                event.preventDefault(); // Prevent default behavior
-                window.location.href = $(this).attr('href'); // Manually navigate to the URL
-            });
-        });
-    </script>
 {% endblock %}
