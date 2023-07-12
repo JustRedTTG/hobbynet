@@ -31,7 +31,7 @@
                 {% include 'base/navbar_item.html' with href=create_topic_url text='Make Topic' %}
             </ul>
             <ul class="navbar-nav ms-auto">
-                {% include 'base/navbar_item.html' with href=profile_url text=request.user.profile %}
+                {% include 'base/navbar_item.html' with href=profile_url text=request.user.profile tooltip='Go to profile' %}
                 {% include 'base/navbar_item.html' with href=logout_url image=logout_image text='Logout' %}
             </ul>
             {% else %}
