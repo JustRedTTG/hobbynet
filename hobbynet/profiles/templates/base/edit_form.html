@@ -20,16 +20,18 @@
                 {{ form.profile_picture.errors }}
             </div>
             <div class="d-flex col mb-0">
-                <div class="col d-flex align-items-center">
+                {% if form.can_delete %}
+                    <div class="col d-flex align-items-center">
 
-                    <a id="id_profile_picture_clear"
-                       class="btn btn-outline-{% if edit_type == 'topic' %}danger{% elif edit_type == 'profile' %}primary{% endif %}">
-                        {% if edit_type == 'topic' %}
-                            Clear topic profile picture
-                        {% elif edit_type == 'profile' %}
-                            Reset profile picture to avataaar
-                        {% endif %}</a>
-                </div>
+                        <a id="id_profile_picture_clear"
+                           class="btn btn-outline-{% if edit_type == 'topic' %}danger{% elif edit_type == 'profile' %}primary{% endif %}">
+                            {% if edit_type == 'topic' %}
+                                Clear topic profile picture
+                            {% elif edit_type == 'profile' %}
+                                Reset profile picture to avataaar
+                            {% endif %}</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-sm d-flex align-items-end justify-content-end">
@@ -108,6 +110,10 @@
 {% endif %}
 {% csrf_token %}
 <div class="container d-flex justify-content-end">
-    <button class="btn btn-danger px-4 py-2 me-4" type="submit" name="delete">Delete</button>
-    <button class="btn btn-success px-4 py-2 me-4" type="submit">Save</button>
+    {% if form.can_delete %}
+        <button class="btn btn-danger px-4 py-2 me-4" type="submit" name="delete">Delete</button>
+    {% endif %}
+    {% if form.can_change %}
+        <button class="btn btn-success px-4 py-2 me-4" type="submit">Save</button>
+    {% endif %}
 </div>

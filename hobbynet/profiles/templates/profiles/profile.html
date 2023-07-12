@@ -8,8 +8,8 @@
             <a href="{% url 'profile_edit' %}" class="profile-picture me-5">
                 <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
             </a>
-        {% elif request.user.is_superuser %}
-            <a href="{% url 'profile_edit' %}?user={{ user.pk }}" class="profile-picture me-5">
+        {% elif request.user.is_superuser or request.user.is_staff and perms.profiles.change_profile %}
+            <a href="{% url 'profile_edit_admin' user.pk %}" class="profile-picture me-5">
                 <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
             </a>
         {% else %}

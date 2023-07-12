@@ -1,7 +1,7 @@
 {% extends 'base/edit_base.html' %}
 
 {% block edit_before_nav %}
-    {% if request.user.is_superuser or request.user.is_staff %}
+    {% if request.user.is_superuser or request.user.is_staff and perms.profiles.view_profile %}
         <select class="form-select {% if not admin_selection %}text-primary border-danger{% endif %}"
                 onchange="window.location.href = this.value;" aria-label="Edit Users">
             {% if not admin_selection %}

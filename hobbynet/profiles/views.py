@@ -37,13 +37,43 @@ def profile_details(request, pk, slug):
     })
 
 
-class ProfileForm(DisplayNameFormRequired, forms.ModelForm):
+class Editing(forms.ModelForm):
+    class Meta:
+        abstract = True
+        model: any
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        change, delete = self.check_permissions()
+        for field in self.fields.values():
+            field.disabled = not change
+            field.can_edit = change
+        self.can_change = change
+        self.can_delete = delete
+
+    def check_permissions(self):
+        editor = self.initial['editor']
+        user = self.initial['user']
+        if editor.is_superuser or editor == user:
+            return [True] * 2
+        if not editor.is_staff:
+            return [False] * 2
+
+        content_type = ContentType.objects.get_for_model(self.Meta.model)
+
+        permission_change = f'{content_type.app_label}.change_{content_type.model}'
+        permission_delete = f'{content_type.app_label}.delete{content_type.model}'
+
+        return editor.has_perm(permission_change), editor.has_perm(permission_delete)
+
+
+class ProfileForm(DisplayNameFormRequired, Editing, forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['display_name', 'profile_picture', 'visibility']
 
 
-class TopicForm(TopicTitleFormRequired, DisplayNameForm, forms.ModelForm):
+class TopicForm(TopicTitleFormRequired, DisplayNameForm, Editing, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["display_name"].widget.attrs['placeholder'] = self.initial['hint_topic_display_name']
@@ -52,26 +82,6 @@ class TopicForm(TopicTitleFormRequired, DisplayNameForm, forms.ModelForm):
     def validate_profile_display_name(self, value):
         if value == self.initial['hint_topic_display_name']:
             raise ValidationError("The topic display name has to be different from the profile display name")
-
-    def __iter__(self):
-        for field_name, field in self.fields.items():
-            field.can_edit = self.check_field_permissions(field_name)
-            yield field_name, field
-
-    def check_field_permissions(self, field_name):
-        if self.fields.user.is_superuser:
-            return True
-        if not self.fields.user.is_staff:
-            return False
-
-        # Get the content type for the model associated with the form
-        content_type = ContentType.objects.get_for_model(self.Meta.model)
-
-        # Get the permission codename for the field
-        permission_codename = f'{content_type.app_label}.change_{content_type.model}_{field_name}'
-
-        # Check if the user has the required permission
-        return self.fields.user.has_perm(permission_codename)
 
     class Meta:
         model = Topic
@@ -92,9 +102,10 @@ class ProfileEdit(LoginRequiredMixin, FormView):
     def dispatch(self, request, *args, **kwargs):
         self.admin_selection = int(kwargs.get('admin_selection', -1))
         self.admin_selection = self.admin_selection if self.admin_selection > 0 else None
-        _, _, staff, _ = self.get_edit_information()
-        if not staff and self.admin_selection:
-            return redirect('profile_edit')
+        edit_type, _, staff, _ = self.get_edit_information()
+        if self.admin_selection and not self.request.user.is_superuser:
+            if not staff or not self.request.user.has_perm(f'{edit_type}s.view_{edit_type}'):
+                return redirect('profile_edit')
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -144,6 +155,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
             'visibility': base_object.visibility,
             'profile_picture': base_object.profile_picture,
 
+            'editor': self.request.user,
             'user': base_object.user,
             'pk': base_object.pk
         }
