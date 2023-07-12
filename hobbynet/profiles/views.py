@@ -93,8 +93,8 @@ class ProfileEdit(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['edit_type'], \
-            context['topic_pk'], admin, context['edited_user'] = self.get_edit_information()
-        if admin:
+            context['topic_pk'], staff, context['edited_user'] = self.get_edit_information()
+        if staff:
             context['users'] = UserModel.objects.all()
             context['admin_selection'] = self.admin_selection
         return context
@@ -103,7 +103,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         edit_type = self.request.GET.get('type', 'profile')
         topic = self.request.GET.get('topic', None)
         topic = int(topic) if topic else None
-        admin = self.request.user.is_superuser
+        staff = self.request.user.is_superuser or self.request.user.is_staff
         if not self.admin_selection:
             user = self.request.user
         else:
@@ -113,7 +113,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
                 user = AnonymousUser()
                 user.pk = self.admin_selection
 
-        return edit_type, topic, admin, user
+        return edit_type, topic, staff, user
 
     def get_form_class(self):
         edit_type, _, _, _ = self.get_edit_information()
