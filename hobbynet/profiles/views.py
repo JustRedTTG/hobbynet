@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, AnonymousUser
 from django import forms
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.http import Http404, QueryDict
 from django.shortcuts import render, redirect
@@ -91,7 +92,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
             except UserModel.DoesNotExist:
                 user = AnonymousUser()
                 user.pk = self.admin_selection
-        
+
         return edit_type, topic, admin, user
 
     def get_form_class(self):
@@ -163,7 +164,14 @@ class ProfileEdit(LoginRequiredMixin, FormView):
         else:
             obj = None
         if obj and obj.profile_picture:
-            obj.profile_picture.delete()
+            previous_profile_picture = obj.profile_picture
+        else:
+            previous_profile_picture = None
+
+        if previous_profile_picture:
+            if (not form.instance.profile_picture) or \
+                    form.instance.profile_picture.name != previous_profile_picture.name:
+                previous_profile_picture.delete(save=False)
 
         if 'delete' in self.request.POST:
             form.instance.delete()
