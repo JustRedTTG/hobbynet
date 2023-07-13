@@ -26,19 +26,19 @@
         </button>
         <div class="collapse navbar-collapse" id="navbar">
             {% if request.user.is_authenticated %}
-            <ul class="navbar-nav me-auto">
-                {% include 'base/navbar_item.html' with href=make_post_url text='Make Post' %}
-                {% include 'base/navbar_item.html' with href=create_topic_url text='Make Topic' %}
-            </ul>
-            <ul class="navbar-nav ms-auto">
-                {% include 'base/navbar_item.html' with href=profile_url text=request.user.profile tooltip='Go to profile' %}
-                {% include 'base/navbar_item.html' with href=logout_url image=logout_image text='Logout' %}
-            </ul>
+                <ul class="navbar-nav me-auto">
+                    {% include 'base/navbar_item.html' with href=make_post_url text='Make Post' %}
+                    {% include 'base/navbar_item.html' with href=create_topic_url text='Make Topic' %}
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% include 'base/navbar_item.html' with href=profile_url text=request.user.profile tooltip='Go to profile' %}
+                    {% include 'base/navbar_item.html' with href=logout_url image=logout_image text='Logout' %}
+                </ul>
             {% else %}
-            <ul class="navbar-nav ms-auto">
-                {% include 'base/navbar_item.html' with href=login_url text='Login' %}
-                {% include 'base/navbar_item.html' with href=register_url text='Register' %}
-            </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% include 'base/navbar_item.html' with href=login_url text='Login' %}
+                    {% include 'base/navbar_item.html' with href=register_url text='Register' %}
+                </ul>
             {% endif %}
         </div>
     </div>
