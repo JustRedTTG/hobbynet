@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 from hobbynet.common.models import Visibility
 from hobbynet.topics.models import Topic
@@ -21,8 +22,9 @@ class Post(Visibility, models.Model):
 
     date_created = models.DateTimeField(default=timezone.now)
 
+    slug = models.CharField(max_length=50, null=True, blank=True)
     title = models.CharField(max_length=50)
-    content = models.TextField()
+    content = models.TextField(blank=True, null=True)
     image = models.ImageField(
         null=True,
         blank=True,
@@ -33,6 +35,8 @@ class Post(Visibility, models.Model):
     def save(self, *args, **kwargs):
         if not self.visibility:
             self.visibility = self.topic.visibility
+        if not self.slug:
+            self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     def __repr__(self):
