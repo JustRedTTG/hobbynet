@@ -6,7 +6,7 @@
     <div class="card-header">
         <div class="d-flex align-items-center">
             <a
-                    href="{% url 'profile_details' pk=post.user.profile.pk slug=post.user.profile.slug %}?topic={{ post.topic.pk }}"
+                    href="{% url 'profile_details_topic' post.user.profile.pk post.user.profile.slug post.topic.pk post.topic.slug %}"
                     data-toggle="tooltip"
                     data-bs-placement="bottom"
                     title="View topic {{ post.topic.title }}">
