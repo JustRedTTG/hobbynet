@@ -2,23 +2,25 @@
 {% load get_topic_active %}
 {% load static %}
 
+
 {% block content %}
+
+    {% if request.user == user %}
+        {% url 'profile_edit' as edit_url %}
+    {% elif request.user.is_superuser or request.user.is_staff and perms.profiles.change_profile %}
+        {% url 'profile_edit_admin' user.pk as edit_url %}
+    {% endif %}
+
     <div class="d-flex mb-4 px-5 profile-header">
-        {% if request.user == user %}
-            <a href="{% url 'profile_edit' %}"
-               class="profile-picture me-5"
+        {% if edit_url %}
+            <a href="{{ edit_url }}"
+               class="profile-picture me-5 position-relative d-flex align-items-start"
                data-toggle="tooltip"
                data-bs-placement="bottom"
-               title="Edit your profile">
+               title="Edit profile">
                 <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
-            </a>
-        {% elif request.user.is_superuser or request.user.is_staff and perms.profiles.change_profile %}
-            <a href="{% url 'profile_edit_admin' user.pk %}"
-               class="profile-picture me-5"
-               data-toggle="tooltip"
-               data-bs-placement="bottom"
-               title="You have permission to edit this profile">
-                <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
+                <img src="{% static 'images/icons/edit.svg' %}"
+                     class="profile-edit-icon position-absolute top-0 end-0 mt-2 me-2 p-1">
             </a>
         {% else %}
             <img {% include 'base/display_profile_picture.html' with user=user %} class="profile-picture me-5">
