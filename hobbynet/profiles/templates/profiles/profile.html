@@ -2,7 +2,6 @@
 {% load get_topic_active %}
 {% load static %}
 
-
 {% block content %}
 
     {% if request.user == user %}
@@ -36,7 +35,7 @@
     <div id="profile-topics" class="container-fluid">
         <ul class="nav nav-tabs">
             {% for topic in user.topic_set.all %}
-                {% if topic.visibility == 'public' or request.user == topic.user %}
+                {% if topic.visibility == 'public' or request.user == topic.user or request.user.is_superuser or request.user.is_staff and perms.topics.view_topic %}
                     <li class="nav-item">
                         <a class="nav-link {% if topic.pk == current_topic.pk %}active{% endif %}"
                            href="{% url 'profile_details_topic' user.pk user.profile.slug topic.pk topic.slug %}">
@@ -56,8 +55,37 @@
             </li>
         </ul>
         <div class="tab-content">
-            {% if current_topic.visibility == 'public' or request.user == current_topic.user %}
+            {% if current_topic.visibility == 'public' or request.user == current_topic.user or request.user.is_superuser or request.user.is_staff and perms.topics.view_topic %}
                 <div class="tab-pane active" id="{{ forloop.counter }}">
+                    {% if request.user == user %}
+                        <div class="card container-sm my-4 px-0">
+                            <div class="card-header">
+                                <div class="d-flex align-items-center">
+                                    <a
+                                            href="{% url 'profile_details_topic' request.user.profile.pk request.user.profile.slug current_topic.pk current_topic.slug %}"
+                                            data-toggle="tooltip"
+                                            data-bs-placement="bottom"
+                                            title="View topic {{ current_topic.title }}">
+                                        <img {% include 'base/display_profile_picture.html' with user=request.user topic=current_topic %}
+                                                class="rounded-circle object-fit-cover me-2" width="40" height="40">
+                                    </a>
+                                    <h6 class="mb-0 mx-2">
+                                        {% include 'base/display_name.html' with display_name=request.user.profile.display_name topic_display_name=current_topic.display_name %}
+                                    </h6>
+                                    <h6 class="ms-2 mb-0">Do you wish to do something on
+                                        "{{ current_topic.title }}"?</h6>
+                                    <span class="ms-auto">
+                                        <a class="btn btn-outline-danger"
+                                                href="{% url 'profile_edit' %}?type=topic&topic={{ current_topic.pk }}&delete=1">Delete topic</a>
+                                        <a class="btn btn-outline-warning"
+                                                href="{% url 'profile_edit' %}?type=topic&topic={{ current_topic.pk }}">Edit topic</a>
+                                        <a class="btn btn-outline-success"
+                                                href="{% url 'post_create' %}?topic={{ current_topic.pk }}">Create Post</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                     {% for post in current_topic.post_set.all %}
                         {% if post.visibility == 'public' or request.user == post.user %}
                             {% include 'base/post.html' with post=post class='fluid' %}

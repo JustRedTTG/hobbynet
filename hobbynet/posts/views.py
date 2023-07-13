@@ -1,8 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.views.generic import FormView
 
+from hobbynet.posts.forms import PostForm
+from hobbynet.topics.models import Topic
 
 UserModel = get_user_model()
 
@@ -14,9 +18,34 @@ def post_details(request, user_id, profile_slug, topic_id, pk):
         'post': user.post_set.get(id=pk)
     })
 
-# class PostCreationView():
-#     pass
-#
-#
-# class PostEditView:
-#     pass
+
+class PostCreationView(LoginRequiredMixin, FormView):
+    form_class = PostForm
+    template_name = 'base/post_create.html'
+
+    def get_topic(self):
+        topic_pk = self.request.GET.get('topic')
+        return Topic.objects.get(pk=topic_pk) if topic_pk else None
+
+    def get_initial(self):
+        initial = {
+            'user': self.request.user,
+            'topic': self.get_topic()
+        }
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['topic'] = self.get_topic()
+        return context
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        if not data['topic']:
+            data['topic'] = form.initial['topic']
+
+        post = self.request.user.post_set.create(**data)
+        post.save()
+        return redirect('profile_details_topic',
+                        self.request.user.pk, self.request.user.profile.slug,
+                        post.topic.pk, post.topic.slug)

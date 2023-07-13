@@ -111,7 +111,11 @@
 {% csrf_token %}
 <div class="container d-flex justify-content-end">
     {% if form.can_delete %}
-        <button class="btn btn-danger px-4 py-2 me-4" type="submit" name="delete">Delete</button>
+       {% include 'base/delete_modal.html' %}
+        <button id="btn-delete" class="btn btn-danger px-4 py-2 me-4"
+                data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                type="button">Delete
+        </button>
     {% endif %}
     {% if form.can_change %}
         <button class="btn btn-success px-4 py-2 me-4" type="submit">Save</button>
