@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 
-from hobbynet.common.models import Visibility
+from hobbynet.common.models import Visibility, SLUG_MAX_LENGTH, TITLE_MAX_LENGTH
 from hobbynet.topics.models import Topic
 from pathlib import Path
 from django_backblaze_b2 import BackblazeB2Storage
@@ -22,8 +22,8 @@ class Post(Visibility, models.Model):
 
     date_created = models.DateTimeField(default=timezone.now)
 
-    slug = models.CharField(max_length=50, null=True, blank=True)
-    title = models.CharField(max_length=50)
+    slug = models.CharField(max_length=SLUG_MAX_LENGTH, null=True, blank=True)
+    title = models.CharField(max_length=TITLE_MAX_LENGTH)
     content = models.TextField(blank=True, null=True)
     image = models.ImageField(
         null=True,
@@ -36,7 +36,7 @@ class Post(Visibility, models.Model):
         if not self.visibility:
             self.visibility = self.topic.visibility
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(self.title)[:SLUG_MAX_LENGTH]
         super().save(*args, **kwargs)
 
     def __repr__(self):

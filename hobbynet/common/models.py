@@ -7,15 +7,19 @@ from django.conf import settings
 from django_backblaze_b2 import BackblazeB2Storage
 import py_avataaars as pa
 
-# Create your models here.
+# Please note that altering these values
+# requires a migration to be made.
+SLUG_MAX_LENGTH = 30
+NAME_MAX_LENGTH = 60
+TITLE_MAX_LENGTH = 85
 
 DISPLAY_NAME_ARGS = {
-    'max_length': 30,
+    'max_length': NAME_MAX_LENGTH,
     'validators': [MinLengthValidator(6)]
 }
 
 TITLE_ARGS = {
-    'max_length': 30,
+    'max_length': TITLE_MAX_LENGTH,
     'validators': [MinLengthValidator(8)]
 }
 
