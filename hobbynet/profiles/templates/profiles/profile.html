@@ -62,7 +62,7 @@
                             <div class="card-header">
                                 <div class="d-flex align-items-center">
                                     <a
-                                            href="{% url 'profile_details' pk=request.user.profile.pk slug=request.user.profile.slug %}?topic={{ current_topic.pk }}"
+                                            href="{% url 'profile_details_topic' request.user.profile.pk request.user.profile.slug current_topic.pk current_topic.slug %}"
                                             data-toggle="tooltip"
                                             data-bs-placement="bottom"
                                             title="View topic {{ current_topic.title }}">
