@@ -76,22 +76,39 @@
                                         "{{ current_topic.title }}"?</h6>
                                     <span class="ms-auto">
                                         <a class="btn btn-outline-danger"
-                                                href="{% url 'profile_edit' %}?type=topic&topic={{ current_topic.pk }}&delete=1">Delete topic</a>
+                                           href="{% url 'profile_edit' %}?type=topic&topic={{ current_topic.pk }}&delete=1">Delete topic</a>
                                         <a class="btn btn-outline-warning"
-                                                href="{% url 'profile_edit' %}?type=topic&topic={{ current_topic.pk }}">Edit topic</a>
+                                           href="{% url 'profile_edit' %}?type=topic&topic={{ current_topic.pk }}">Edit topic</a>
                                         <a class="btn btn-outline-success"
-                                                href="{% url 'post_create' %}?topic={{ current_topic.pk }}">Create Post</a>
+                                           href="{% url 'post_create' %}?topic={{ current_topic.pk }}">Create Post</a>
                                     </span>
                                 </div>
                             </div>
                         </div>
                     {% endif %}
-                    {% for post in current_topic.post_set.all %}
+                    {% for post in posts %}
                         {% if post.visibility == 'public' or request.user == post.user %}
                             {% include 'base/post.html' with post=post class='fluid' %}
                         {% endif %}
                     {% endfor %}
-                    {% if current_topic.post_set.count < 1 %}
+                    <div class="container d-flex mb-2">
+                        <div class="col d-flex">
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}"
+                                   class="btn btn-outline-secondary px-4 py-2 ms-4 me-auto">previous</a>
+                            {% endif %}
+                        </div>
+                        <div class="col d-flex align-items-center text-center">
+                            <h4 class="w-100 m-0">{{ page_obj.number }}</h4>
+                        </div>
+                        <div class="col d-flex">
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}"
+                                   class="btn btn-outline-secondary px-4 py-2 me-4 ms-auto">next</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if posts.count < 1 %}
                         <h1 class="mt-5 text-center">{{ current_topic.title }} has no posts.</h1>
                     {% endif %}
                 </div>

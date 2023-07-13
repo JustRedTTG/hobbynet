@@ -9,9 +9,10 @@ from django.core.exceptions import ValidationError
 from django.http import Http404, QueryDict
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView
 
 from hobbynet.common.forms import DisplayNameFormRequired, DisplayNameForm, TopicTitleFormRequired
+from hobbynet.posts.models import Post
 from hobbynet.profiles.models import Profile
 from hobbynet.topics.models import Topic
 from hobbynet.topics.forms import BasicTopicForm
@@ -19,30 +20,51 @@ from hobbynet.topics.forms import BasicTopicForm
 UserModel: User = get_user_model()
 
 
-def profile_details(request, pk, slug, topic_pk=None, topic_slug=None):
-    user = UserModel.objects.get(pk=pk)
-    topic: Topic = user.topic_set.get(pk=topic_pk) if topic_pk else user.topic_set.first()
+class ProfileDetails(ListView):
+    model = Post
+    paginate_by = 2
+    template_name = 'profiles/profile.html'
+    context_object_name = 'posts'
 
-    if not user or (
-            request.user != user
-            and
-            not (request.user.is_superuser
-                 or
-                 (request.user.is_staff and request.user.has_perm('profiles.view_profile')))
-            and
-            user.profile.visibility != 'public'
-    ):
-        raise Http404("User profile doesn't exist")
-    if user.profile.slug != slug:
-        if topic:
-            return redirect('profile_details_topic', pk=pk, slug=user.profile.slug, topic_pk=topic.pk,
-                            topic_slug=topic.slug)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user: UserModel = None
+        self.topic: Topic = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.user = UserModel.objects.get(pk=kwargs.get('pk'))
+        self.topic = self.user.topic_set.get(pk=kwargs.get('topic_pk')) if kwargs.get(
+            'topic_pk') else self.user.topic_set.first()
+        if not self.user or (
+                self.request.user != self.user
+                and
+                not (self.request.user.is_superuser
+                     or
+                     (self.request.user.is_staff and self.request.user.has_perm('profiles.view_profile')))
+                and
+                self.user.profile.visibility != 'public'
+        ):
+            raise Http404("User profile doesn't exist")
+        if self.user.profile.slug != self.kwargs.get('slug'):
+            if self.topic:
+                return redirect('profile_details_topic',
+                                pk=self.user.pk, slug=self.user.profile.slug,
+                                topic_pk=self.topic.pk, topic_slug=self.topic.slug)
+            else:
+                return redirect('profile_details', pk=self.user.pk, slug=self.user.profile.slug)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.user
+        context['current_topic'] = self.topic
+        return context
+
+    def get_queryset(self):
+        if self.topic:
+            return self.topic.post_set.all().order_by('date_created').reverse()
         else:
-            return redirect('profile_details', pk=pk, slug=user.profile.slug)
-    return render(request, 'profiles/profile.html', context={
-        'user': user,
-        'current_topic': topic
-    })
+            return Topic.objects.none()
 
 
 class Editing(forms.ModelForm):
