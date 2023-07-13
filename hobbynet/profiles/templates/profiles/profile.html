@@ -67,7 +67,7 @@
                                             data-bs-placement="bottom"
                                             title="View topic {{ current_topic.title }}">
                                         <img {% include 'base/display_profile_picture.html' with user=request.user topic=current_topic %}
-                                                class="rounded-circle me-2" width="40" height="40">
+                                                class="rounded-circle object-fit-cover me-2" width="40" height="40">
                                     </a>
                                     <h6 class="mb-0 mx-2">
                                         {% include 'base/display_name.html' with display_name=request.user.profile.display_name topic_display_name=current_topic.display_name %}
