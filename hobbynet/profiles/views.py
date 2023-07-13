@@ -22,7 +22,7 @@ UserModel: User = get_user_model()
 
 class ProfileDetails(ListView):
     model = Post
-    paginate_by = 2
+    paginate_by = 10
     template_name = 'profiles/profile.html'
     context_object_name = 'posts'
 
