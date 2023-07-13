@@ -112,7 +112,7 @@
 <div class="container d-flex justify-content-end">
     {% if form.can_delete %}
        {% include 'base/delete_modal.html' %}
-        <button class="btn btn-danger px-4 py-2 me-4"
+        <button id="btn-delete" class="btn btn-danger px-4 py-2 me-4"
                 data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
                 type="button">Delete
         </button>
