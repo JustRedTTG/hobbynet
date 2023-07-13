@@ -1,5 +1,7 @@
 {% load static %}
 
+{% url 'post_details' post.user.pk post.user.profile.slug post.topic.pk post.pk  as post_url%}
+
 <div class="card container-sm my-4 px-0">
     <div class="card-header">
         <div class="d-flex align-items-center">
@@ -37,7 +39,7 @@
     <div class="card-body">
         {% if href_disable != 1 %}
             <a class="hidden_a"
-               href="{% url 'post_details' post.user.pk post.user.profile.slug post.topic.pk post.pk %}">
+               href="{{ post_url }}">
         {% endif %}
 
         <h4 class="card-title">{{ post.title }}</h4>
@@ -53,7 +55,7 @@
             <a type="button" class="btn btn-sm" href="#">
                 <img src="{% static "images/icons/like.svg" %}" alt="Like" width="20" height="20">
             </a>
-            <a type="button" class="btn btn-sm" href="#">
+            <a type="button" class="btn btn-sm" data-toggle="copyhref" data-href="{{ post_url }}">
                 <img src="{% static "images/icons/share.svg" %}" alt="Share" width="20" height="20">
             </a>
             <a type="button" class="btn btn-sm" href="#">

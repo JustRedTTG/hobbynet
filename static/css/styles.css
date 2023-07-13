@@ -1,6 +1,6 @@
-@import "resets.css";
-@import "components.css";
-@import "navbar.css";
-@import "account_authentication_form.css";
-@import "profile_details_page.css";
-@import "profile_topic_edit_page.css";
+@import "resets.css?v=1";
+@import "components.css?v=1";
+@import "navbar.css?v=1";
+@import "account_authentication_form.css?v=1";
+@import "profile_details_page.css?v=1";
+@import "profile_topic_edit_page.css?v=1";
