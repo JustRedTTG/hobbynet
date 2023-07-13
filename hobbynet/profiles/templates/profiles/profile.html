@@ -80,7 +80,7 @@
                                         <a class="btn btn-outline-warning"
                                                 href="{% url 'profile_edit' %}?type=topic&topic={{ current_topic.pk }}">Edit topic</a>
                                         <a class="btn btn-outline-success"
-                                                href="#">Create Post</a>
+                                                href="{% url 'post_create' %}?topic={{ current_topic.pk }}">Create Post</a>
                                     </span>
                                 </div>
                             </div>
