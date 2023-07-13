@@ -36,7 +36,7 @@
     <div id="profile-topics" class="container-fluid">
         <ul class="nav nav-tabs">
             {% for topic in user.topic_set.all %}
-                {% if topic.visibility == 'public' or request.user == topic.user or request.user.is_superuser or request.user.is_staff and perms.profiles.change_profile %}
+                {% if topic.visibility == 'public' or request.user == topic.user or request.user.is_superuser or request.user.is_staff and perms.topics.view_topic %}
                     <li class="nav-item">
                         <a class="nav-link {% if topic.pk == current_topic.pk %}active{% endif %}"
                            href="{% url 'profile_details_topic' user.pk user.profile.slug topic.pk topic.slug %}">
@@ -56,7 +56,7 @@
             </li>
         </ul>
         <div class="tab-content">
-            {% if current_topic.visibility == 'public' or request.user == current_topic.user or request.user.is_superuser or request.user.is_staff and perms.profiles.change_profile %}
+            {% if current_topic.visibility == 'public' or request.user == current_topic.user or request.user.is_superuser or request.user.is_staff and perms.topics.view_topic %}
                 <div class="tab-pane active" id="{{ forloop.counter }}">
                     {% for post in current_topic.post_set.all %}
                         {% if post.visibility == 'public' or request.user == post.user %}
