@@ -1,0 +1,7 @@
+.form-control-post:focus {
+    box-shadow: none !important;
+}
+
+.form-control-post-content {
+    resize: none;
+}

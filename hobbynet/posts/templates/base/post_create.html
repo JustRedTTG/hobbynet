@@ -1,31 +1,52 @@
+{% extends 'base/base.html' %}
 {% load static %}
 
-<div class="card container-sm my-4 px-0">
-    <div class="card-header">
-        <div class="d-flex align-items-center">
-            <a
-                    href="{% url 'profile_details_topic' request.user.profile.pk request.user.profile.slug topic.pk topic.slug %}"
-                    data-toggle="tooltip"
-                    data-bs-placement="bottom"
-                    title="View topic {{ topic.title }}">
-                <img {% include 'base/display_profile_picture.html' with user=request.user topic=topic %}
-                        class="rounded-circle object-fit-cover me-2" width="40" height="40">
-            </a>
-            <h6 class="mb-0 mx-2">
-                {% include 'base/display_name.html' with display_name=request.user.profile.display_name topic_display_name=topic.display_name %}
-            </h6>
-            <h6 class="ms-2 mb-0">create a new post on "{{ topic.title }}"</h6>
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        <div class="card container-sm my-4 px-0">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <a
+                            {% if topic %}
+                                href="{% url 'profile_details_topic' request.user.profile.pk request.user.profile.slug topic.pk topic.slug %}"
+                                data-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                title="View topic {{ topic.title }}"{% endif %}>
+                        <img {% include 'base/display_profile_picture.html' with user=request.user topic=topic %}
+                                class="rounded-circle object-fit-cover me-2" width="40" height="40">
+                    </a>
+                    <h6 class="mb-0 mx-2">
+                        {% include 'base/display_name.html' with display_name=request.user.profile.display_name topic_display_name=topic.display_name %}
+                    </h6>
+                    {% if topic %}
+                        <h6 class="ms-2 mb-0">create a new post on "{{ topic.title }}"</h6>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ form.title }}</h4>
+                {{ form.title.errors }}
+                <p class="card-text">{{ form.content }}</p>
+                {{ form.content.errors }}
+                {% if not form.topic %}
+                    {{ form.topic }}
+                    {{ form.topic.errors }}
+                {% endif %}
+                {{ form.image }}
+                {{ form.image.errors }}
+                {#        {% if post.image %}#}
+                {#            <img src="{{ post.image.url }}" alt="User Image"#}
+                {#                 class="img-fluid mx-auto d-block mb-3" style="max-height: 500px;">#}
+                {#        {% endif %}#}
+            </div>
+            {{ form.errors }}
+
+            <div class="card-footer d-flex justify-content-end">
+                <button class="btn btn-info px-4 py-2 me-4"
+                        type="submit">Post
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="card-body">
-        <h4 class="card-title">{{ form.title }}</h4>
-        <p class="card-text">{{ form.content }}</p>
-{#        {% if post.image %}#}
-{#            <img src="{{ post.image.url }}" alt="User Image"#}
-{#                 class="img-fluid mx-auto d-block mb-3" style="max-height: 500px;">#}
-{#        {% endif %}#}
-    </div>
-    <div class="card-footer text-muted text-right">
-        {{ post.date_created|date:"d M Y H:m" }}
-    </div>
-</div>
+        {% csrf_token %}
+    </form>
+{% endblock %}

@@ -15,6 +15,8 @@ class TopicCreate(LoginRequiredMixin, FormView):
     form_class = BasicTopicForm
     template_name = 'topics/create.html'
 
+
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.create = True

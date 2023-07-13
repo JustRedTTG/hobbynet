@@ -23,14 +23,28 @@ class PostCreationView(LoginRequiredMixin, FormView):
     form_class = PostForm
     template_name = 'base/post_create.html'
 
-    def get_initial(self):
-        initial = super().get_initial()
+    def get_topic(self):
         topic_pk = self.request.GET.get('topic')
-        initial['topic'] = Topic.objects.get(pk=topic_pk) if topic_pk else None
+        return Topic.objects.get(pk=topic_pk) if topic_pk else None
+
+    def get_initial(self):
+        initial = {
+            'user': self.request.user,
+            'topic': self.get_topic()
+        }
         return initial
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['topic'] = self.get_topic()
+        return context
+
     def form_valid(self, form):
-        post = self.request.user.post_set.create(**form.cleaned_data)
+        data = form.cleaned_data
+        if not data['topic']:
+            data['topic'] = form.initial['topic']
+
+        post = self.request.user.post_set.create(**data)
         post.save()
         return redirect('profile_details_topic',
                         self.request.user.pk, self.request.user.profile.slug,
