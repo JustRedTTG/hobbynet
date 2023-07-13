@@ -8,7 +8,7 @@
                 <div class="d-flex align-items-center">
                     <a
                             {% if topic %}
-                                href="{% url 'profile_details_topic' request.user.profile.pk request.user.profile.slug topic.pk topic.slug %}"
+                                href="{% include 'base/profile_details_url.html' with topic=topic %}"
                                 data-toggle="tooltip"
                                 data-bs-placement="bottom"
                                 title="View topic {{ topic.title }}"{% endif %}>

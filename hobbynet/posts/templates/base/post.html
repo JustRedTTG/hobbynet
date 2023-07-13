@@ -1,12 +1,12 @@
 {% load static %}
 
-{% url 'post_details' post.user.pk post.user.profile.slug post.topic.pk post.pk  as post_url %}
+
 
 <div class="card container-sm my-4 px-0">
     <div class="card-header">
         <div class="d-flex align-items-center">
             <a
-                    href="{% url 'profile_details_topic' post.user.profile.pk post.user.profile.slug post.topic.pk post.topic.slug %}"
+                    href="{% include 'base/profile_details_url.html' with topic=post.topic %}"
                     data-toggle="tooltip"
                     data-bs-placement="bottom"
                     title="View topic {{ post.topic.title }}">
@@ -39,7 +39,7 @@
     <div class="card-body">
         {% if href_disable != 1 %}
             <a class="hidden_a"
-               href="{{ post_url }}">
+               href="{% include 'base/post_details_url.html' with post=post %}">
         {% endif %}
 
         <h4 class="card-title">{{ post.title }}</h4>
@@ -55,7 +55,7 @@
             <a type="button" class="btn btn-sm" href="#">
                 <img src="{% static "images/icons/like.svg" %}" alt="Like" width="20" height="20">
             </a>
-            <a type="button" class="btn btn-sm" data-toggle="copyhref" data-href="{{ post_url }}">
+            <a type="button" class="btn btn-sm" data-toggle="copyhref" data-href="{% include 'base/post_details_url.html' with post=post %}">
                 <img src="{% static "images/icons/share.svg" %}" alt="Share" width="20" height="20">
             </a>
             <a type="button" class="btn btn-sm" href="#">

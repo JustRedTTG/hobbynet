@@ -38,7 +38,7 @@
                 {% if topic.visibility == 'public' or request.user == topic.user or request.user.is_superuser or request.user.is_staff and perms.topics.view_topic %}
                     <li class="nav-item">
                         <a class="nav-link {% if topic.pk == current_topic.pk %}active{% endif %}"
-                           href="{% url 'profile_details_topic' user.pk user.profile.slug topic.pk topic.slug %}">
+                           href="{% include 'base/profile_details_url.html' with topic=topic %}">
                             {{ topic.title }}
                         </a>
                     </li>
@@ -62,7 +62,7 @@
                             <div class="card-header">
                                 <div class="d-flex align-items-center">
                                     <a
-                                            href="{% url 'profile_details_topic' request.user.profile.pk request.user.profile.slug current_topic.pk current_topic.slug %}"
+                                            href="{% include 'base/profile_details_url.html' with topic=current_topic %}"
                                             data-toggle="tooltip"
                                             data-bs-placement="bottom"
                                             title="View topic {{ current_topic.title }}">
