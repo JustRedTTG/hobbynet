@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
-from django.utils.text import slugify
+from django.template.defaultfilters import slugify
 
 from hobbynet.common.models import Visibility, SLUG_MAX_LENGTH, TITLE_MAX_LENGTH
 from hobbynet.topics.models import Topic
