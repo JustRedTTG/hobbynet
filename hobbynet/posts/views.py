@@ -1,3 +1,5 @@
+from typing import Union
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,11 +16,20 @@ UserModel = get_user_model()
 
 
 def post_details(request, user_pk, profile_slug, topic_pk, topic_slug, pk, slug):
-    user = UserModel.objects.get(pk=user_pk)
-    topic: Topic = user.topic_set.get(pk=topic_pk)
-    post: Post = user.post_set.get(pk=pk)
+    try:
+        user: UserModel = UserModel.objects.get(pk=user_pk)
+    except UserModel.DoesNotExist:
+        user = None
+    try:
+        topic: Topic = user.topic_set.get(pk=topic_pk)
+    except Union[AttributeError, Topic.DoesNotExist]:
+        topic = None
+    try:
+        post: Post = user.post_set.get(pk=pk)
+    except Union[AttributeError, Post.DoesNotExist]:
+        post = None
 
-    if not user or (
+    if not user or not topic or not post or (
             request.user != user
             and
             not (request.user.is_superuser
