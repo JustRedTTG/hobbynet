@@ -32,7 +32,10 @@ class ProfileDetails(ListView):
         self.topic: Topic = None
 
     def dispatch(self, request, *args, **kwargs):
-        self.user = UserModel.objects.get(pk=kwargs.get('pk'))
+        try:
+            self.user = UserModel.objects.get(pk=kwargs.get('pk'))
+        except UserModel.DoesNotExist:
+            self.user = None
         self.topic = self.user.topic_set.get(pk=kwargs.get('topic_pk')) if kwargs.get(
             'topic_pk') else self.user.topic_set.first()
         if not self.user or (
@@ -45,7 +48,7 @@ class ProfileDetails(ListView):
                 self.user.profile.visibility != 'public'
         ):
             raise Http404("User profile doesn't exist")
-        if self.user.profile.slug != self.kwargs.get('slug'):
+        if self.user.profile.slug != self.kwargs.get('slug') or self.topic and self.topic.slug != self.kwargs.get('topic_slug'):
             if self.topic:
                 return redirect('profile_details_topic',
                                 pk=self.user.pk, slug=self.user.profile.slug,
