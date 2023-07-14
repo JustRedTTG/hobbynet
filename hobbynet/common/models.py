@@ -3,9 +3,9 @@ from django.core.validators import MinLengthValidator
 from django_backblaze_b2 import BackblazeB2Storage
 from django.core.files.base import ContentFile
 from django.conf import settings
+from urllib.parse import quote
 from django.db import models
 import py_avataaars as pa
-import unicodedata
 import random
 
 
@@ -30,7 +30,7 @@ TITLE_ARGS = {
 }
 
 def slugify(value):
-    return unicodedata.normalize('NFKC', value).lower().replace(' ', '-')
+    return quote(value.replace(' ', '-'))
 
 def create_slug_mixin(slug_field):
     class SlugMixin(models.Model):
