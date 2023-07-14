@@ -38,9 +38,7 @@ def create_slug_mixin(slug_field):
             populate_from=slug_field,
             slugify_function=slugify,
             max_length=SLUG_MAX_LENGTH,
-            unique=True,
-            null=True,
-            blank=True
+            unique=False,
         )
 
         class Meta:
