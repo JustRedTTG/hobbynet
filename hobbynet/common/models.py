@@ -1,12 +1,14 @@
-import random
-from django.core.files.base import ContentFile
-from django.core.validators import MinLengthValidator
-from django.db import models
-from django.conf import settings
 from django_extensions.db.fields import AutoSlugField
-from django_slugify_processor.text import slugify
+from django.core.validators import MinLengthValidator
 from django_backblaze_b2 import BackblazeB2Storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+from django.db import models
 import py_avataaars as pa
+import unicodedata
+import random
+
+
 
 # Please note that altering these values
 # requires a migration to be made.
@@ -27,21 +29,23 @@ TITLE_ARGS = {
     'validators': [MinLengthValidator(TITLE_MIN_LENGTH)]
 }
 
+def slugify(value):
+    return unicodedata.normalize('NFKC', value).lower().replace(' ', '-')
 
-class SlugMixin(models.Model):
-    slug_field = 'pk'
-    slug = AutoSlugField(
-        populate_from=slug_field,
-        slugify_function=slugify,
-        max_length=SLUG_MAX_LENGTH,
-        unique=True,
-        null=False,
-        blank=False
-    )
+def create_slug_mixin(slug_field):
+    class SlugMixin(models.Model):
+        slug = AutoSlugField(
+            populate_from=slug_field,
+            slugify_function=slugify,
+            max_length=SLUG_MAX_LENGTH,
+            unique=True,
+            null=True,
+            blank=True
+        )
 
-    class Meta:
-        abstract = True
-
+        class Meta:
+            abstract = True
+    return SlugMixin
 
 class Visibility(models.Model):
     visibility = models.CharField(
@@ -75,8 +79,7 @@ class DisplayName(models.Model):
         abstract = True
 
 
-class DisplayNameRequired(SlugMixin, models.Model):
-    slug_field = 'display_name'
+class DisplayNameRequired(create_slug_mixin('display_name'), models.Model):
     display_name = models.CharField(
         **DISPLAY_NAME_ARGS
     )
@@ -85,8 +88,7 @@ class DisplayNameRequired(SlugMixin, models.Model):
         abstract = True
 
 
-class TopicTitleRequired(SlugMixin, models.Model):
-    slug_field = 'title'
+class TopicTitleRequired(create_slug_mixin('title'), models.Model):
     title = models.CharField(
         **TITLE_ARGS
     )
