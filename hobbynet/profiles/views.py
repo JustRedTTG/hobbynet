@@ -1,3 +1,5 @@
+from typing import Union
+
 from django.conf import settings
 from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
@@ -36,8 +38,12 @@ class ProfileDetails(ListView):
             self.user = UserModel.objects.get(pk=kwargs.get('pk'))
         except UserModel.DoesNotExist:
             self.user = None
-        self.topic = self.user.topic_set.get(pk=kwargs.get('topic_pk')) if kwargs.get(
-            'topic_pk') else self.user.topic_set.first()
+        try:
+            self.topic = self.user.topic_set.get(pk=kwargs.get('topic_pk')) if kwargs.get(
+                'topic_pk') else self.user.topic_set.first()
+        except Union[AttributeError, Topic.DoesNotExist]:
+            self.topic = None
+
         if not self.user or (
                 self.request.user != self.user
                 and
@@ -48,6 +54,9 @@ class ProfileDetails(ListView):
                 self.user.profile.visibility != 'public'
         ):
             raise Http404("User profile doesn't exist")
+        elif not self.topic and kwargs.get('topic_pk'):
+            raise Http404("Topic doesn't exist")
+
         if self.user.profile.slug != self.kwargs.get('slug') or self.topic and self.topic.slug != self.kwargs.get('topic_slug'):
             if self.topic:
                 return redirect('profile_details_topic',
