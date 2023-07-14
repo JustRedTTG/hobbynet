@@ -1,35 +1,11 @@
 import django.contrib.auth.views as auth_views
-import django.contrib.auth.forms as auth_forms
-from django import forms
-from django.contrib.auth import get_user_model, login, logout
-from django.shortcuts import render, redirect
+
+from django.contrib.auth import login, logout
+from django.shortcuts import redirect
 import django.views.generic as views
 from django.urls import reverse_lazy
 
-from hobbynet.common.forms import DisplayNameFormRequired
-from hobbynet.profiles.models import Profile
-
-UserModel = get_user_model()
-
-
-class RegisterAccountForm(DisplayNameFormRequired, auth_forms.UserCreationForm):
-
-    def save(self, commit=True):
-        user = super().save(commit)
-
-        profile = Profile(
-            user=user,
-            display_name=self.cleaned_data['display_name']
-        )
-
-        if commit:
-            profile.save()
-
-        return user
-
-    class Meta(auth_forms.UserCreationForm.Meta):
-        model = UserModel
-        fields = ('email',)
+from .forms import RegisterAccountForm
 
 
 class RegisterAccountView(views.CreateView):
@@ -45,6 +21,7 @@ class RegisterAccountView(views.CreateView):
 
 class LoginAccountView(auth_views.LoginView):
     template_name = 'app_auth/login.html'
+
 
 def logout_view(request):
     logout(request)
