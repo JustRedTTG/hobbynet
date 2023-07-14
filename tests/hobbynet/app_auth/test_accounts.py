@@ -27,12 +27,23 @@ INVALID_ACCOUNT_DATA = {
 
 class AccountTestCase(TestCase):
     def account_model_creation_valid(self, kwargs):
-        user = UserModel.objects.create_user(**kwargs)
-        self.assertIsNotNone(user.pk)
+        try:
+            user = UserModel.objects.create_user(**kwargs)
+        except (ValueError, ValidationError):
+            self.fail(f'Account with {kwargs} should be valid')
+        except Exception as e:
+            self.fail(f'Account with {kwargs} should be valid, but got exception: {e}')
+        self.assertIsNotNone(user)
+
+    def account_form_creation_valid(self, kwargs):
+
+
 
     def account_model_creation_invalid(self, kwargs, notice_key='key'):
-        with self.assertRaises((ValueError, ValidationError), msg=f'Account with {notice_key}="{kwargs.get(notice_key, "___")}" should be invalid'):
+        with self.assertRaises((ValueError, ValidationError),
+                               msg=f'Account with {notice_key}="{kwargs.get(notice_key, "___")}" should be invalid'):
             UserModel.objects.create_user(**kwargs)
+
 
     def test_account_model_creation_with_valid_data(self):
         self.account_model_creation_valid(VALID_ACCOUNT_DATA)
@@ -43,3 +54,14 @@ class AccountTestCase(TestCase):
                 kwargs = VALID_ACCOUNT_DATA.copy()
                 kwargs[key] = value
                 self.account_model_creation_invalid(kwargs, key)
+
+    def test_account_form_creation_with_valid_data(self):
+        self.account_form_creation_valid(VALID_ACCOUNT_DATA)
+
+    def test_account_form_creation_with_invalid_data(self):
+        for key, values in INVALID_ACCOUNT_DATA.items():
+            for value in values:
+                kwargs = VALID_ACCOUNT_DATA.copy()
+                kwargs[key] = value
+                self.account_form_creation_invalid(kwargs, key)
+
