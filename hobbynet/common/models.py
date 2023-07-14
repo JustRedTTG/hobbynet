@@ -13,14 +13,17 @@ SLUG_MAX_LENGTH = 30
 NAME_MAX_LENGTH = 60
 TITLE_MAX_LENGTH = 85
 
+NAME_MIN_LENGTH = 5
+TITLE_MIN_LENGTH = 5
+
 DISPLAY_NAME_ARGS = {
     'max_length': NAME_MAX_LENGTH,
-    'validators': [MinLengthValidator(6)]
+    'validators': [MinLengthValidator(NAME_MIN_LENGTH)]
 }
 
 TITLE_ARGS = {
     'max_length': TITLE_MAX_LENGTH,
-    'validators': [MinLengthValidator(8)]
+    'validators': [MinLengthValidator(TITLE_MIN_LENGTH)]
 }
 
 
