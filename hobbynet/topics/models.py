@@ -25,7 +25,7 @@ class Topic(TopicTitleRequired, DisplayName, ProfilePictureMixin, VisibilityRequ
         return self.title
 
     def __str__(self):
-        return f'[{self.visibility}][{self.user}] {self.title}'
+        return self.title
 
     @property
     def slug(self):

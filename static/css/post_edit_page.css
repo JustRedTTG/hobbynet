@@ -5,3 +5,13 @@
 .form-control-post-content {
     resize: none;
 }
+
+.post-image-icon, .post-image-icon img {
+    width: 30px;
+    height: 30px;
+}
+
+#id_image_image {
+    margin-top: -60px;
+    outline: 1px solid rgba(0, 0, 0, 30%);
+}

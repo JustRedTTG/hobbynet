@@ -44,7 +44,7 @@ def post_details(request, user_pk, profile_slug, topic_pk, topic_slug, pk, slug)
 
 class PostCreationView(LoginRequiredMixin, FormView):
     form_class = PostForm
-    template_name = 'base/post_create.html'
+    template_name = 'posts/post_create.html'
 
     def get_topic(self):
         topic_pk = self.request.GET.get('topic')
