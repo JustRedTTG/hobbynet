@@ -1,6 +1,5 @@
 from django_extensions.db.fields import AutoSlugField
 from django.core.validators import MinLengthValidator
-from django_backblaze_b2 import BackblazeB2Storage
 from django.core.files.base import ContentFile
 from django.conf import settings
 from urllib.parse import quote
@@ -100,7 +99,6 @@ def profile_picture_class_generator(upload_to, default=None, blank: bool = False
         profile_picture = models.ImageField(
             null=True,
             blank=True,
-            storage=BackblazeB2Storage,
             upload_to=upload_to,
             default=default
         )

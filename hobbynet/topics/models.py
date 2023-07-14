@@ -1,8 +1,5 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.template.defaultfilters import slugify
-from django_backblaze_b2 import BackblazeB2Storage
 
 from hobbynet.common.models import VisibilityRequired, profile_picture_class_generator, DisplayName, TopicTitleRequired, \
     SLUG_MAX_LENGTH

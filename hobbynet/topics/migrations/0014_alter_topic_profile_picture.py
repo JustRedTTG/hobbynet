@@ -8,13 +8,13 @@ import hobbynet.topics.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('topics', '0005_rename_privacy_topic_visibility'),
+        ('topics', '0013_alter_topic_slug'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='topic',
             name='profile_picture',
-            field=models.ImageField(blank=True, default=None, null=True, upload_to=hobbynet.topics.models.topic_image_generator),
+            field=models.ImageField(blank=True, default=None, null=True, storage=None, upload_to=hobbynet.topics.models.topic_image_generator),
         ),
     ]

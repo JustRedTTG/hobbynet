@@ -1,13 +1,8 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
-from django.template.defaultfilters import slugify
-
-from hobbynet.common.models import Visibility, SLUG_MAX_LENGTH, TITLE_MAX_LENGTH, TopicTitleRequired
+from hobbynet.common.models import Visibility, TopicTitleRequired
 from hobbynet.topics.models import Topic
-from pathlib import Path
-from django_backblaze_b2 import BackblazeB2Storage
 
 UserModel = get_user_model()
 
@@ -26,7 +21,6 @@ class Post(TopicTitleRequired, Visibility, models.Model):
     image = models.ImageField(
         null=True,
         blank=True,
-        storage=BackblazeB2Storage,
         upload_to=posts_image_generator
     )
 

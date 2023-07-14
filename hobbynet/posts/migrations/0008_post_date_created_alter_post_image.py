@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='post',
             name='image',
-            field=models.ImageField(blank=True, null=True, storage=django_backblaze_b2.storage.BackblazeB2Storage, upload_to=hobbynet.posts.models.posts_image_generator),
+            field=models.ImageField(blank=True, null=True, upload_to=hobbynet.posts.models.posts_image_generator),
         ),
     ]

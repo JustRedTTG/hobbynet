@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='topic',
             name='profile_picture',
-            field=models.ImageField(blank=True, null=True, storage=django_backblaze_b2.storage.BackblazeB2Storage, upload_to=hobbynet.topics.models.topic_image_generator),
+            field=models.ImageField(blank=True, null=True, upload_to=hobbynet.topics.models.topic_image_generator),
         ),
     ]
