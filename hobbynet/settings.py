@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'hobbynet.topics',
     'hobbynet.posts',
 
-    # 'django_backblaze_b2',
+    'django_backblaze_b2',
 ]
 
 MIDDLEWARE = [
@@ -165,8 +165,7 @@ BACKBLAZE_CONFIG = {
     "bucket": "HobbyNetMedia"
 }
 
-# DEFAULT_FILE_STORAGE = 'django_backblaze_b2.storage.BackblazeB2Storage'
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'django_backblaze_b2.storage.BackblazeB2Storage'
 
 CSRF_TRUSTED_ORIGINS = [
     'https://hobbynet.redttg.com'
