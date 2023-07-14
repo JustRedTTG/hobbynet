@@ -8,5 +8,3 @@ del settings.CACHES['django-backblaze-b2']
 
 settings.MEDIA_ROOT = settings.BASE_DIR / 'media'
 settings.MEDIA_URL = '/media/'
-
-print('CONFIGURED FOR TESTING')
