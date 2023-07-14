@@ -3,7 +3,8 @@ from django.core.files.base import ContentFile
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.conf import settings
-
+from django_extensions.db.fields import AutoSlugField
+from django_slugify_processor.text import slugify
 from django_backblaze_b2 import BackblazeB2Storage
 import py_avataaars as pa
 
@@ -75,6 +76,18 @@ class TopicTitleRequired(models.Model):
 
     class Meta:
         abstract = True
+
+
+class SlugMixin(models.Model):
+    slug = AutoSlugField(
+        populate_from='title',
+        slugify_function=slugify,
+        max_length=SLUG_MAX_LENGTH,
+        unique=True,
+        null=False,
+        blank=False
+    )
+
 
 
 def profile_picture_class_generator(upload_to, default=None, blank: bool = False):
