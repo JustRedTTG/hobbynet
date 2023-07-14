@@ -28,6 +28,21 @@ TITLE_ARGS = {
 }
 
 
+class SlugMixin(models.Model):
+    slug_field = 'pk'
+    slug = AutoSlugField(
+        populate_from=slug_field,
+        slugify_function=slugify,
+        max_length=SLUG_MAX_LENGTH,
+        unique=True,
+        null=False,
+        blank=False
+    )
+
+    class Meta:
+        abstract = True
+
+
 class Visibility(models.Model):
     visibility = models.CharField(
         default='private',
@@ -60,7 +75,8 @@ class DisplayName(models.Model):
         abstract = True
 
 
-class DisplayNameRequired(models.Model):
+class DisplayNameRequired(SlugMixin, models.Model):
+    slug_field = 'display_name'
     display_name = models.CharField(
         **DISPLAY_NAME_ARGS
     )
@@ -69,25 +85,14 @@ class DisplayNameRequired(models.Model):
         abstract = True
 
 
-class TopicTitleRequired(models.Model):
+class TopicTitleRequired(SlugMixin, models.Model):
+    slug_field = 'title'
     title = models.CharField(
         **TITLE_ARGS
     )
 
     class Meta:
         abstract = True
-
-
-class SlugMixin(models.Model):
-    slug = AutoSlugField(
-        populate_from='title',
-        slugify_function=slugify,
-        max_length=SLUG_MAX_LENGTH,
-        unique=True,
-        null=False,
-        blank=False
-    )
-
 
 
 def profile_picture_class_generator(upload_to, default=None, blank: bool = False):

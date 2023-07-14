@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 
-from hobbynet.common.models import Visibility, SLUG_MAX_LENGTH, TITLE_MAX_LENGTH
+from hobbynet.common.models import Visibility, SLUG_MAX_LENGTH, TITLE_MAX_LENGTH, TopicTitleRequired
 from hobbynet.topics.models import Topic
 from pathlib import Path
 from django_backblaze_b2 import BackblazeB2Storage
@@ -16,14 +16,12 @@ def posts_image_generator(instance, filename):
     return f'post_images/{instance.user_id}/{instance.topic_id}/{filename}'
 
 
-class Post(Visibility, models.Model):
+class Post(TopicTitleRequired, Visibility, models.Model):
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
 
     date_created = models.DateTimeField(default=timezone.now)
 
-    slug = models.CharField(max_length=SLUG_MAX_LENGTH, null=True, blank=True)
-    title = models.CharField(max_length=TITLE_MAX_LENGTH)
     content = models.TextField(blank=True, null=True)
     image = models.ImageField(
         null=True,
@@ -35,8 +33,6 @@ class Post(Visibility, models.Model):
     def save(self, *args, **kwargs):
         if not self.visibility:
             self.visibility = self.topic.visibility
-        if not self.slug:
-            self.slug = slugify(self.title)[:SLUG_MAX_LENGTH]
         super().save(*args, **kwargs)
 
     def __repr__(self):

@@ -26,7 +26,3 @@ class Topic(TopicTitleRequired, DisplayName, ProfilePictureMixin, VisibilityRequ
 
     def __str__(self):
         return self.title
-
-    @property
-    def slug(self):
-        return slugify(self.title)[:SLUG_MAX_LENGTH]

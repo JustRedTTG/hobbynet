@@ -20,10 +20,6 @@ ProfilePictureMixin = profile_picture_class_generator(profile_image_generator)
 class Profile(DisplayNameRequired, ProfilePictureMixin, VisibilityRequired, models.Model):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, primary_key=True)
 
-    @property
-    def slug(self):
-        return slugify(self.display_name)[:SLUG_MAX_LENGTH]
-
     def __str__(self):
         return self.display_name
 
