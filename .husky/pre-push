@@ -3,4 +3,4 @@
 
 echo "Running test coverage..."
 
-#. run_tests_with_coverage.sh
+. run_coverage.sh
