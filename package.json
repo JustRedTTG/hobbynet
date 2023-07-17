@@ -1,0 +1,5 @@
+"husky": {
+"hooks": {
+"pre-commit": "cd .husky && ./pre-commit"
+}
+}
