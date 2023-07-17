@@ -3,6 +3,4 @@
 
 echo "Running Python tests..."
 
-source venv/bin/activate
-python manage.py test --parallel 6 --noinput
-deactivate
+. run_tests.sh
