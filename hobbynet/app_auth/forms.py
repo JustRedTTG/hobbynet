@@ -1,7 +1,9 @@
 from profile import Profile
 
 from django.contrib.auth import get_user_model
+from django.core.validators import RegexValidator
 
+from hobbynet.app_auth.models import EMAIL_REGEX
 from hobbynet.common.forms import DisplayNameFormRequired
 from hobbynet.profiles.models import Profile
 
@@ -11,6 +13,13 @@ UserModel = get_user_model()
 
 
 class RegisterAccountForm(DisplayNameFormRequired, auth_forms.UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].validators.append(RegexValidator(
+            regex=EMAIL_REGEX,
+            message='Enter a real email address.',
+        ))
 
     def save(self, commit=True):
         user = super().save(commit)

@@ -44,6 +44,8 @@ INVALID_PROFILE_DATA = {
         't' * (NAME_MIN_LENGTH - 1),  # too short display_name should be invalid
     ]
 }
+
+
 class AccountTestCase(TestCase):
     def account_model_creation_valid(self, kwargs):
         try:
@@ -61,12 +63,23 @@ class AccountTestCase(TestCase):
     def account_form_creation_invalid(self, kwargs, notice_key='key'):
         form = RegisterAccountForm(data=kwargs)
         self.assertFalse(form.is_valid(),
-                        msg=f'Account with {notice_key}="{kwargs.get(notice_key, "___")}" should be invalid')
+                         msg=f'Account with {notice_key}="{kwargs.get(notice_key, "___")}" should be invalid')
 
     def account_model_creation_invalid(self, kwargs, notice_key='key'):
         with self.assertRaises((ValueError, ValidationError),
                                msg=f'Account with {notice_key}="{kwargs.get(notice_key, "___")}" should be invalid'):
             UserModel.objects.create_user(**kwargs)
+
+    def account_view_creation_valid(self, kwargs):
+        result = Client().post(reverse('register'), kwargs)
+        self.assertEqual(result.status_code, 302, msg=f'Account with {kwargs} should be valid')
+        self.assertEqual(
+            result.headers['Location'], reverse('profile_details_self'), msg=f'Account with {kwargs} should be valid')
+
+    def account_view_creation_invalid(self, kwargs, notice_key='key'):
+        result = Client().post(reverse('register'), kwargs)
+        self.assertEqual(result.status_code, 200,
+                         msg=f'Account with {notice_key}="{kwargs.get(notice_key, "___")}" should be invalid')
 
     def test_account_model_creation_with_valid_data(self):
         self.account_model_creation_valid(VALID_ACCOUNT_DATA)
@@ -87,3 +100,13 @@ class AccountTestCase(TestCase):
                 kwargs = VALID_PROFILE_DATA.copy()
                 kwargs[key] = value
                 self.account_form_creation_invalid(kwargs, key)
+
+    def test_account_view_creation_with_valid_data(self):
+        self.account_view_creation_valid(VALID_PROFILE_DATA)
+
+    def test_account_view_creation_with_invalid_data(self):
+        for key, values in INVALID_PROFILE_DATA.items():
+            for value in values:
+                kwargs = VALID_PROFILE_DATA.copy()
+                kwargs[key] = value
+                self.account_view_creation_invalid(kwargs, key)
