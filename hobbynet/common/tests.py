@@ -11,6 +11,8 @@ def format_errors(errors):
 def model_blank_to_null(kwargs):
     kwargs = kwargs.copy()
     for key, value in kwargs.items():
+        if key == 'visibility':
+            continue
         if value.strip() == '':
             kwargs[key] = None
     return kwargs
