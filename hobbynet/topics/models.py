@@ -4,8 +4,8 @@ from django.db import models
 from django.utils.text import slugify
 from django_backblaze_b2 import BackblazeB2Storage
 
-from hobbynet.common.models import VisibilityRequired, profile_picture_class_generator, DisplayName, TopicTitleRequired, \
-    SLUG_MAX_LENGTH
+from hobbynet.common.models import VisibilityRequired, profile_picture_class_generator, DisplayName, \
+    TopicTitleRequired, Visibility
 
 UserModel = get_user_model()
 
@@ -17,7 +17,7 @@ def topic_image_generator(instance, filename):
 ProfilePictureMixin = profile_picture_class_generator(topic_image_generator, blank=True)
 
 
-class Topic(TopicTitleRequired, DisplayName, ProfilePictureMixin, VisibilityRequired, models.Model):
+class Topic(TopicTitleRequired, DisplayName, ProfilePictureMixin, Visibility, models.Model):
     upload_to = topic_image_generator
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
 
