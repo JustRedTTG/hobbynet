@@ -29,7 +29,7 @@ TITLE_ARGS = {
 }
 
 def slugify(value):
-    return quote(value.replace(' ', '-'))
+    return quote(value.replace(' ', '-').replace('/', '-').replace('\\', '-'))
 
 def create_slug_mixin(slug_field):
     class SlugMixin(models.Model):
