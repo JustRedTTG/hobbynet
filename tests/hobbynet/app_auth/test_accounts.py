@@ -13,13 +13,14 @@ UserModel = get_user_model()
 VALID_ACCOUNT_DATA = {
     'email': 'red@redttg.com',
     'password': '"[(red123!@#$%абв^&*)]//"\\-+,.|_=~`',
+    'display_name': 't' * NAME_MIN_LENGTH,
 }
 
 VALID_PROFILE_DATA = {
     'email': VALID_ACCOUNT_DATA['email'],
     'password1': VALID_ACCOUNT_DATA['password'],
     'password2': VALID_ACCOUNT_DATA['password'],
-    'display_name': 't' * NAME_MIN_LENGTH,
+    'display_name': VALID_ACCOUNT_DATA['display_name'],
 }
 
 INVALID_ACCOUNT_DATA = {
