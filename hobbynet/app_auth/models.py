@@ -8,8 +8,6 @@ from django.db import models
 from django.utils import timezone
 from django.apps import apps
 
-from hobbynet.profiles.models import Profile
-
 EMAIL_REGEX = re.compile(r'^[\w.-]+@[\w.-]+\.\w+$')
 
 
@@ -18,7 +16,7 @@ class AccountManager(auth_models.BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
         user.save(using=self._db)
-
+        Profile = apps.get_model('profiles', 'Profile')
         profile = Profile(
             user=user,
             display_name=display_name
@@ -32,7 +30,7 @@ class AccountManager(auth_models.BaseUserManager):
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, display_name, **extra_fields)
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, display_name=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -41,7 +39,7 @@ class AccountManager(auth_models.BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(email, password, display_name, **extra_fields)
 
 
 class AccountModel(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
