@@ -78,8 +78,9 @@ class TopicTestCase(TestCase):
     def topic_view_creation_valid(self, kwargs):
         result = self.client.post(reverse('topic_create'), kwargs)
         self.assertEqual(result.status_code, 302, msg=f'Topic with {kwargs} should be valid')
+        topic = Topic.objects.last()
         self.assertEqual(
-            result.headers['Location'], reverse('profile_details_self'), msg=f'Topic with {kwargs} should be valid')
+            result.headers['Location'], reverse('profile_details_topic', args=(self.user.pk, self.user.profile.slug, topic.pk, topic.slug)), msg=f'Topic with {kwargs} should be valid')
 
     def topic_view_creation_invalid(self, kwargs, notice_key='key'):
         result = self.client.post(reverse('register'), kwargs)
