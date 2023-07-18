@@ -13,13 +13,6 @@ EMAIL_REGEX = re.compile(r'^[\w.-]+@[\w.-]+\.\w+$')
 
 class AccountManager(auth_models.BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
-        if not email:
-            raise ValueError("The given email must be set")
-        if not password:
-            raise ValueError("The given password must be set")
-
-        if not EMAIL_REGEX.match(email):
-            raise ValidationError('Invalid email format')
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
         user.save(using=self._db)
