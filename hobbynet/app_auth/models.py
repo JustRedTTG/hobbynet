@@ -8,11 +8,13 @@ from django.db import models
 from django.utils import timezone
 from django.apps import apps
 
+from hobbynet.profiles.models import Profile
+
 EMAIL_REGEX = re.compile(r'^[\w.-]+@[\w.-]+\.\w+$')
 
 
 class AccountManager(auth_models.BaseUserManager):
-    def _create_user(self, email, password, **extra_fields):
+    def _create_user(self, email, password, display_name, **extra_fields):
         if not email:
             raise ValueError("The given email must be set")
         if not password:
@@ -20,15 +22,23 @@ class AccountManager(auth_models.BaseUserManager):
 
         if not EMAIL_REGEX.match(email):
             raise ValidationError('Invalid email format')
+
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
         user.save(using=self._db)
+
+        profile = Profile(
+            user=user,
+            display_name=display_name
+        )
+        profile.save()
+
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, password=None, display_name=None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(email, password, display_name, **extra_fields)
 
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
