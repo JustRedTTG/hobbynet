@@ -10,6 +10,9 @@ class BasicTopicForm(TopicTitleFormRequired, DisplayNameForm, forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["display_name"].widget.attrs['placeholder'] = self.initial.get('hint_topic_display_name', '')
         self.fields["display_name"].validators.append(self.validate_profile_display_name)
+        self.fields['visibility'].required = False
+        self.fields['visibility'].widget.choices[0] = ('', 'From Profile')
+        self.fields['visibility'].initial = self.fields['visibility'].widget.choices[0][0]
 
     def validate_profile_display_name(self, value):
         if value == self.initial.get('hint_topic_display_name', ''):
