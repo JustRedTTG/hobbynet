@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-echo "Running test coverage..."
+echo "Updating requirements.txt..."
 
-./run_coverage.sh
+./update_requirements.sh
