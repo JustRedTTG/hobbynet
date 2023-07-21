@@ -41,7 +41,7 @@ class ProfileDetails(ListView):
         try:
             self.topic = self.user.topic_set.get(pk=kwargs.get('topic_pk')) if kwargs.get(
                 'topic_pk') else self.user.topic_set.first()
-        except Union[AttributeError, Topic.DoesNotExist]:
+        except (AttributeError, Topic.DoesNotExist):
             self.topic = None
 
         if not self.user or (
