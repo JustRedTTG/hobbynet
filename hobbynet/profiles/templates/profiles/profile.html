@@ -31,6 +31,10 @@
             <p>Topics: {{ user.topic_set.count }}</p>
             <p>Posts: {{ user.post_set.count }}</p>
         </div>
+        <div class="ms-4 mt-5">
+            <h4>About me</h4>
+            <p>{{ user.profile.description }}</p>
+        </div>
     </div>
     <div id="profile-topics" class="container-fluid">
         <ul class="nav nav-tabs">
