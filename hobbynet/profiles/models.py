@@ -4,7 +4,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 
 from hobbynet.common.models import VisibilityRequired, profile_picture_class_generator, DisplayNameRequired, \
-    SLUG_MAX_LENGTH
+    SLUG_MAX_LENGTH, Description
 
 UserModel = get_user_model()
 DISPLAY_NAME_MIN_LENGTH = 6
@@ -17,7 +17,7 @@ def profile_image_generator(instance, filename):
 ProfilePictureMixin = profile_picture_class_generator(profile_image_generator)
 
 
-class Profile(DisplayNameRequired, ProfilePictureMixin, VisibilityRequired, models.Model):
+class Profile(Description, DisplayNameRequired, ProfilePictureMixin, VisibilityRequired, models.Model):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):

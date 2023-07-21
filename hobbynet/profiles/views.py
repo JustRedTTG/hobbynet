@@ -1,23 +1,19 @@
 from typing import Union
 
-from django.conf import settings
-from django.contrib.auth import get_user_model, logout
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User, AnonymousUser
-from django import forms
-from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ValidationError
-from django.http import Http404, QueryDict
-from django.shortcuts import render, redirect
+
+from django.http import Http404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView
 
-from hobbynet.common.forms import DisplayNameFormRequired, DisplayNameForm, TopicTitleFormRequired
 from hobbynet.posts.models import Post
+from hobbynet.profiles.forms import ProfileForm, TopicForm
 from hobbynet.profiles.models import Profile
 from hobbynet.topics.models import Topic
-from hobbynet.topics.forms import BasicTopicForm
 
 UserModel: User = get_user_model()
 
@@ -79,45 +75,7 @@ class ProfileDetails(ListView):
             return Topic.objects.none()
 
 
-class Editing(forms.ModelForm):
-    class Meta:
-        abstract = True
-        model: any
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        change, delete = self.check_permissions()
-        for field in self.fields.values():
-            field.disabled = not change
-            field.can_edit = change
-        self.can_change = change
-        self.can_delete = delete
-
-    def check_permissions(self):
-        editor = self.initial['editor']
-        user = self.initial['user']
-        if editor.is_superuser or editor == user:
-            return [True] * 2
-        if not editor.is_staff:
-            return [False] * 2
-
-        content_type = ContentType.objects.get_for_model(self.Meta.model)
-
-        permission_change = f'{content_type.app_label}.change_{content_type.model}'
-        permission_delete = f'{content_type.app_label}.delete{content_type.model}'
-
-        return editor.has_perm(permission_change), editor.has_perm(permission_delete)
-
-
-class ProfileForm(DisplayNameFormRequired, Editing, forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['display_name', 'profile_picture', 'visibility']
-
-
-class TopicForm(Editing, BasicTopicForm, forms.ModelForm):
-    class Meta(BasicTopicForm.Meta):
-        pass
 
 
 class ProfileEdit(LoginRequiredMixin, FormView):
