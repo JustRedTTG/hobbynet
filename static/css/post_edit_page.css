@@ -2,10 +2,6 @@
     box-shadow: none !important;
 }
 
-.form-control-post-content {
-    resize: none;
-}
-
 .post-image-icon, .post-image-icon img {
     width: 30px;
     height: 30px;

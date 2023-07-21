@@ -7,8 +7,6 @@ from django.db import models
 import py_avataaars as pa
 import random
 
-
-
 # Please note that altering these values
 # requires a migration to be made.
 SLUG_MAX_LENGTH = 30
@@ -28,8 +26,14 @@ TITLE_ARGS = {
     'validators': [MinLengthValidator(TITLE_MIN_LENGTH)]
 }
 
+DESCRIPTION_ARGS = {
+
+}
+
+
 def slugify(value):
     return quote(value.replace(' ', '-').replace('/', '-').replace('\\', '-'))
+
 
 def create_slug_mixin(slug_field):
     class SlugMixin(models.Model):
@@ -42,7 +46,9 @@ def create_slug_mixin(slug_field):
 
         class Meta:
             abstract = True
+
     return SlugMixin
+
 
 class Visibility(models.Model):
     visibility = models.CharField(
@@ -79,6 +85,17 @@ class DisplayName(models.Model):
 class DisplayNameRequired(create_slug_mixin('display_name'), models.Model):
     display_name = models.CharField(
         **DISPLAY_NAME_ARGS
+    )
+
+    class Meta:
+        abstract = True
+
+
+class Description(models.Model):
+    description = models.TextField(
+        null=True,
+        blank=True,
+        **DESCRIPTION_ARGS
     )
 
     class Meta:

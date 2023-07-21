@@ -31,6 +31,12 @@
             <p>Topics: {{ user.topic_set.count }}</p>
             <p>Posts: {{ user.post_set.count }}</p>
         </div>
+        {% if user.profile.description %}
+            <div class="ms-4 mt-5">
+                <h4>About me</h4>
+                <p>{{ user.profile.description }}</p>
+            </div>
+        {% endif %}
     </div>
     <div id="profile-topics" class="container-fluid">
         <ul class="nav nav-tabs">
@@ -84,6 +90,12 @@
                                     </span>
                                 </div>
                             </div>
+                        </div>
+                    {% endif %}
+                    {% if current_topic.description %}
+                        <div class="container-sm my-4 px-0">
+                            <h4>Description</h4>
+                            <p>{{ current_topic.description }}</p>
                         </div>
                     {% endif %}
                     {% for post in posts %}
