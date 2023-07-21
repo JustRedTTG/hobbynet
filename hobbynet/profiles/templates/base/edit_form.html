@@ -82,6 +82,26 @@
         </div>
     </div>
 </div>
+{# Description #}
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-sm d-flex flex-column">
+            <div class="d-flex col mt-0">
+                {% if edit_type == 'topic' %}
+                    <h2>Topic Description</h2>
+                {% else %}
+                    <h2>About Me</h2>
+                {% endif %}
+            </div>
+            <div class="d-flex col">
+                {{ form.description.errors }}
+            </div>
+        </div>
+        <div class="profile_edit_text col-sm d-flex align-items-end justify-content-end">
+            {{ form.description }}
+        </div>
+    </div>
+</div>
 {# Visibility #}
 <div class="container mb-5">
     <div class="row">
