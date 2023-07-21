@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from hobbynet.common.forms import DisplayNameFormRequired, DescriptionForm
+from hobbynet.common.forms import DisplayNameFormRequired, DescriptionForm, Styling
 from hobbynet.profiles.models import Profile
 from hobbynet.topics.forms import BasicTopicForm
 
@@ -35,7 +35,7 @@ class Editing(forms.ModelForm):
         return editor.has_perm(permission_change), editor.has_perm(permission_delete)
 
 
-class ProfileForm(DescriptionForm, DisplayNameFormRequired, Editing, forms.ModelForm):
+class ProfileForm(Styling, DescriptionForm, DisplayNameFormRequired, Editing, forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['description', 'display_name', 'profile_picture', 'visibility']

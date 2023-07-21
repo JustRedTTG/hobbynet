@@ -1,11 +1,11 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from hobbynet.common.forms import DisplayNameForm, TopicTitleFormRequired, DescriptionForm
+from hobbynet.common.forms import DisplayNameForm, TopicTitleFormRequired, DescriptionForm, Styling
 from hobbynet.topics.models import Topic
 
 
-class BasicTopicForm(TopicTitleFormRequired, DescriptionForm, DisplayNameForm, forms.ModelForm):
+class BasicTopicForm(Styling, TopicTitleFormRequired, DescriptionForm, DisplayNameForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["display_name"].widget.attrs['placeholder'] = self.initial.get('hint_topic_display_name', '')

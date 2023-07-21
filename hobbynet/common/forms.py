@@ -21,11 +21,25 @@ class DisplayNameForm(forms.Form):
 
     class Meta:
         abstract = True
+
+
 class DescriptionForm(forms.Form):
-    description = forms.TimeField(
+    description = forms.CharField(
         required=False,
+        widget=forms.Textarea(attrs={'class': 'auto-scroll-height'}),
         **DESCRIPTION_ARGS
     )
+
+    class Meta:
+        abstract = True
+
+
+class Styling(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = ' '.join(
+                (self.fields[field_name].widget.attrs.get('class') or '', 'form-control'))
 
     class Meta:
         abstract = True
