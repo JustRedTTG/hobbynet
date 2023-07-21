@@ -22,11 +22,11 @@ def post_details(request, user_pk, profile_slug, topic_pk, topic_slug, pk, slug)
         user = None
     try:
         topic: Topic = user.topic_set.get(pk=topic_pk)
-    except Union[AttributeError, Topic.DoesNotExist]:
+    except (AttributeError, Topic.DoesNotExist):
         topic = None
     try:
         post: Post = user.post_set.get(pk=pk)
-    except Union[AttributeError, Post.DoesNotExist]:
+    except (AttributeError, Post.DoesNotExist):
         post = None
 
     if not user or not topic or not post or (
