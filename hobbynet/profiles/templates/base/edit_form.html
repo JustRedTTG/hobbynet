@@ -6,7 +6,11 @@
     <div class="row">
         <div class="col-sm d-flex flex-column">
             <div class="d-flex col mt-0">
-                <h2>Profile Picture</h2>
+                {% if edit_type == 'topic' %}
+                    <h2>Topic Picture</h2>
+                {% else %}
+                    <h2>Profile Picture</h2>
+                {% endif %}
             </div>
             {% if edit_type == 'topic' %}
                 <div class="d-flex col">
@@ -55,7 +59,11 @@
     <div class="row">
         <div class="col-sm d-flex flex-column">
             <div class="d-flex col mt-0">
-                <h2>Display Name</h2>
+                {% if edit_type == 'topic' %}
+                    <h2>Topic Display Name</h2>
+                {% else %}
+                    <h2>Display Name</h2>
+                {% endif %}
             </div>
             {% if edit_type == 'topic' %}
                 <div class="d-flex col">
@@ -79,7 +87,11 @@
     <div class="row">
         <div class="col-sm d-flex flex-column">
             <div class="d-flex col mt-0">
-                <h2>Visibility</h2>
+                {% if edit_type == 'topic' %}
+                    <h2>Topic Visibility</h2>
+                {% else %}
+                    <h2>Visibility</h2>
+                {% endif %}
             </div>
             <div class="d-flex col">
                 {{ form.visibility.errors }}
