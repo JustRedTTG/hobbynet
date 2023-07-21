@@ -141,6 +141,7 @@ class ProfileEdit(LoginRequiredMixin, FormView):
             return {}
 
         base = {
+            'description': base_object.description,
             'display_name': base_object.display_name,
             'visibility': base_object.visibility,
             'profile_picture': base_object.profile_picture,
