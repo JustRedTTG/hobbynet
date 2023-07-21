@@ -44,15 +44,17 @@
                     </li>
                 {% endif %}
             {% endfor %}
-            <li class="nav-item"
-                data-toggle="tooltip"
-                data-bs-placement="auto"
-                title="Add topic">
-                <a class="nav-link text-success fw-bold fs-4 py-0"
-                   href="{% url 'topic_create' %}">
-                    +
-                </a>
-            </li>
+            {% if request.user == user %}
+                <li class="nav-item"
+                    data-toggle="tooltip"
+                    data-bs-placement="auto"
+                    title="Add topic">
+                    <a class="nav-link text-success fw-bold fs-4 py-0"
+                       href="{% url 'topic_create' %}">
+                        +
+                    </a>
+                </li>
+            {% endif %}
         </ul>
         <div class="tab-content">
             {% if current_topic.visibility == 'public' or request.user == current_topic.user or request.user.is_superuser or request.user.is_staff and perms.topics.view_topic %}
