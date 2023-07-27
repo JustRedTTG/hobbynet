@@ -14,7 +14,7 @@ def topic_image_generator(instance, filename):
     return f'topic_profile_pictures/{instance.user_id}/{filename}'
 
 
-ProfilePictureMixin = profile_picture_class_generator(topic_image_generator, blank=True)
+ProfilePictureMixin = profile_picture_class_generator(topic_image_generator)
 
 
 class Topic(TopicTitleRequired, Description, DisplayName, ProfilePictureMixin, Visibility, models.Model):

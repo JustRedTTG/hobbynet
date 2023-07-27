@@ -4,7 +4,6 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 from urllib.parse import quote
 from django.db import models
-import py_avataaars as pa
 import random
 
 # Please note that altering these values
@@ -111,7 +110,7 @@ class TopicTitleRequired(create_slug_mixin('title'), models.Model):
         abstract = True
 
 
-def profile_picture_class_generator(upload_to, default=None, blank: bool = False):
+def profile_picture_class_generator(upload_to, default=None):
     class ProfilePicture(models.Model):
         profile_picture = models.ImageField(
             null=True,
@@ -121,25 +120,6 @@ def profile_picture_class_generator(upload_to, default=None, blank: bool = False
         )
 
         def save(self, **kwargs):
-            if blank:
-                return super().save(**kwargs)
-            if not self.profile_picture:
-                avataaar = pa.PyAvataaar(
-                    style=random.choice(list(pa.AvatarStyle)),
-                    skin_color=random.choice(list(pa.SkinColor)),
-                    hair_color=random.choice(list(pa.HairColor)),
-                    top_type=random.choice(list(pa.TopType)),
-                    facial_hair_type=random.choice(list(pa.FacialHairType)),
-                    clothe_type=random.choice(list(pa.ClotheType)),
-                    mouth_type=random.choice(list(pa.MouthType)),
-                    eye_type=random.choice(list(pa.EyesType)),
-                    eyebrow_type=random.choice(list(pa.EyebrowType)),
-                    accessories_type=random.choice(list(pa.AccessoriesType)),
-                    background_color=random.choice(list(pa.Color)),
-                )
-                file = avataaar.render_png()
-                self.profile_picture.save('avataaar.png', ContentFile(file), save=False)
-
             return super().save(**kwargs)
 
         class Meta:
