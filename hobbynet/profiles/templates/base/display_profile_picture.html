@@ -1,3 +1,5 @@
+{% load static %}
+
 {% if topic %}
     {% if topic.profile_picture %}
         src="{{ topic.profile_picture.url }}"
@@ -5,6 +7,10 @@
         src="{{ user.profile.profile_picture.url }}"
     {% endif %}
 {% else %}
-    src="{{ user.profile.profile_picture.url }}"
+    {% if user.profile.profile_picture %}
+        src="{{ user.profile.profile_picture.url }}"
+    {% else %}
+        src="{% static 'images/nopfp.png' %}"
+    {% endif %}
 {% endif %}
 alt="{{ user.profile }}"
