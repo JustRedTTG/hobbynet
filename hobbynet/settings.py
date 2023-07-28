@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'hobbynet.posts',
 
     'django_backblaze_b2',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,6 @@ MIDDLEWARE = [
 if DEBUG:
     del MIDDLEWARE[0]
     del MIDDLEWARE[-1]
-
 
 ROOT_URLCONF = 'hobbynet.urls'
 
@@ -170,4 +170,11 @@ DEFAULT_FILE_STORAGE = 'django_backblaze_b2.storage.BackblazeB2Storage'
 CSRF_TRUSTED_ORIGINS = [
     'https://hobbynet.redttg.com'
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
+}
