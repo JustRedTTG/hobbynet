@@ -26,14 +26,12 @@
             <div class="d-flex col mb-0">
                 {% if form.can_delete %}
                     <div class="col d-flex align-items-center">
-
-                        <a id="id_profile_picture_clear"
-                           class="btn btn-outline-{% if edit_type == 'topic' %}danger{% elif edit_type == 'profile' %}primary{% endif %}">
-                            {% if edit_type == 'topic' %}
+                        {% if edit_type == 'topic' %}
+                            <a id="id_profile_picture_clear"
+                               class="btn btn-outline-danger">
                                 Clear topic profile picture
-                            {% elif edit_type == 'profile' %}
-                                Reset profile picture to avataaar
-                            {% endif %}</a>
+                            </a>
+                        {% endif %}
                     </div>
                 {% endif %}
             </div>
@@ -143,7 +141,7 @@
 {% csrf_token %}
 <div class="container d-flex justify-content-end">
     {% if form.can_delete %}
-       {% include 'base/delete_modal.html' %}
+        {% include 'base/delete_modal.html' %}
         <button id="btn-delete" class="btn btn-danger px-4 py-2 me-4"
                 data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
                 type="button">Delete
